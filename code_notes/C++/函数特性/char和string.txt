@@ -1,0 +1,118 @@
+class string {      //封装了char* s  两个都占四个字节，都要new一个char数组来保存数据
+	char* s;
+}
+char * p;
+
+1、const char* p: p is a pointer to const char(char const* p 一样)
+   意思就是不能通过p指针来修改p指向的内容(但是内容可以修改)。
+
+2、char* p      : p is a pointer to char
+   意思就是可通过p指针来修改p指向的内容
+
+3、char* const p: p is a const pointer to char
+   意思就是p指针是一个常指针，他指向的内存地址不能变，定义的时候就得初始化
+   一旦给指针p赋了值，就不能再对他进行赋值操作，但是可以通过他修改他指向的
+   内存地址中的值。
+
+4、char p[size] :p is a const pointer to char
+   意思就是p指针是一个常指针，当定义字符数组时，系统就为他分配了地址空间，
+   p指针指向的地址是不能变的。但可以通过他修改其指向的内存空间中的值。当要
+   通过P指针修改其内容时，只能通过传值的方式，不能通过传地址的方式。
+
+5、string: C++的一个字符串类，他可以进行c版本字符串不允许的许多操作比如+ -，
+    > < ==(比较，返回bool值)等操作。
+
+赋值
+1、const char* -> char* 
+1) strcpy(char*,const char*)这是一种拷贝的方法，a和b指向的地址不一样
+char* a;
+a = (char*)malloc(20);
+const char* b = "zhangnianyong";
+strcpy(a,b);
+
+2)strcpy(char*,const char*)和上面一样
+char* a = new char;
+memset(a,0,20);
+const char* b = "zhangnianyong";
+strcpy(a,b);
+
+   3)强制转换
+const char* b = "zhangnianyong";
+char* a = (char*)b;
+这种方式a和b指向的地址一样，可以通过指针a修改其内容，但是不能通
+过指针b修改其内容。通过指针a修改其内容后，指针b指向的内容也发生
+变化。
+
+2、char* ->const char*
+1)直接赋值
+char* a;
+const char* b = a;
+这样指针a和指针b的指向的地址一样，可以通过指针a修改其内容,但是不
+能通过指针b修改其内容，通过指针a修改其内容后，指针b指向的地址空间
+的内容也发生了变化。
+
+3、const char* -> char* const
+1)强制转换
+const char* b;
+char* const a = (char*)b;
+这种方式a和b指向的地址一样，可以通过指针a修改其内容，但是不能通过
+指针b修改其内容。通过指针a修改其内容后，指针b指向的内容也发生变化。
+
+4、char* const ->const char*
+1)直接赋值
+char a[5] = "zhang";
+char* const b = a;
+const char* c = b;
+这种方式b和c指向的地址一样，可通过指针b修改其内容，但是不能通过指
+针c来修改其内容。通过指针b修改其内容后，指针c指向的内容也发生变化。
+
+
+5、char[] -> const char*、char*、char* const
+1)直接赋值
+char a[5] = "zhang";
+const char* b = a;
+char* c = a;
+char* const d = a;
+这种方式指针a和其他类型指针指向的地址是一样的，可以通过指针a修改来
+修改其内容，如: a[i] = 'a'。
+
+6、const char*、char*、char* const -> char[]
+1)strcpy(char* const char*)
+char a[20] = {0};
+const char* b = "zhangnianyong";
+char* const c = "zhangnianyong";
+char* d       = "zhangnianyong";
+strcpy(a,b/c/d);
+通过拷贝的方式，
+
+2)memcpy(void*, const void*, size)
+
+7、char[] -> string
+char a[20] = {0};
+string b;
+b = a;
+
+8、char* -> string
+char *a;
+a = (char*)malloc(15);
+string b;
+strcpy(a,"zhangnianyong");
+b = a;
+
+9、const char* -> string;
+const char* a;
+string b;
+b =a;
+
+10、char* const -> string
+char* const a;
+string b;
+b = a;
+注意: char[]、const char*、char*、char* const -> string,直接赋值
+
+11、string -> const char*
+string a;
+const char* b;
+b = a.c_str();
+12、string -> char[]、char*、char* const
+只要通过中间变量const char*就可以了

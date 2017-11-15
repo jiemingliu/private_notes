@@ -1,0 +1,52 @@
+引言：自我赋值发生在对象被赋值给自己时：
+a[i] = a[j];        //潜在的自我赋值
+如果i和j有相同的值，这便是个自我赋值。在看
+*px = *py;        //潜在的自我赋值
+ 如果px和py恰巧指向同一个东西，这也是自我赋值。这些并不明显的自我赋值，是"别名"（aliasing）带来的结果：
+class Base{...};
+class Derived : public Base{...};
+void doSomething(const Base& rb,Derived* pd);
+//rb和*pb有可能其实有可能其实是同一个对象
+
+class Widget{
+...
+private:
+    Bitmap* pb;        //指针，指向一个从heap分配而来的对象
+};
+
+Widget& Widget::operator=(const Widget& rhs)    //一份不安全的operator=实现版本
+{
+        delete pb;                            //停止使用当前的bitmap
+        pb = new Widget(*rhs.pb);//使用rhs's bitmap的副本
+        return *this;
+}   
+下面是operator=实现代码，表面上看起来合理，但自我赋值出现时并不安全（它也不具备异常安全性）
+Widget& Widget::operator=(const Widget& rhs)
+{
+    Bitmap* pOrig = pb;            //记住原先的pb
+    pb = new Bitmap(*rhs.pb);    //令pb指向*pb的一个复件
+    delete pOrig;                //删除原先的pb
+    return *this;
+}
+这里的自我赋值问题是，operator=函数内的*this（赋值的目的端）和rhs有可能是同一个对象。果真如此delete就不止是销毁当前对象的bitmap，它也销毁rhs的bitmap。在函数末尾，Widget--它原本不该被自我赋值动作改变的--发现自己持有一个指针指向一个已被删除的对象！
+    欲阻止这种错误，传统做法是借由operator=最前面的一个"证同测试（identity test）"达到"自我赋值"的检验目的：
+Widget& Widget::operator=(const Widget& rhs)
+{
+    if(this == &rhs) return *this;
+
+    delete pb;
+    pb = new Bitmap(*rhs.pb);
+    return *this; 
+}
+    这个新版本仍然存在异常方面的麻烦。更明确地说，如果"new Bitmap"导致异常（不论是因为内存分配时内存不足或因为Bitmap的copy构造函数抛出异常），Widget最终会持有一个指针指向一块被删除的Bitmap。这样的指针有害。你无法安全地删除它们，甚至无法安全地读取它们。唯一能对它们做的安全事情是付出许多调试能量找出错误的起源。
+ Widget& Widget::operator=(const Widget& rhs)
+{
+	if(this == &rhs) return *this;
+    Bitmap* pOrig = pb;            //记住原先的pb
+    pb = new Bitmap(*rhs.pb);    //令pb指向*pb的一个复件
+    delete pOrig;                //删除原先的pb
+    return *this;
+}
+请记住
+确保当对象自我赋值时operator=有良好行为。其中技术包括比较"来源对象"和"目标对象"的地址、精心周到的语句顺以及copy-and-swap。
+确定任何函数如果操作一个以上的对象，而其中多个对象是同一个对象时，其行为仍然正确。

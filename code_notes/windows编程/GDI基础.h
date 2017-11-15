@@ -1,0 +1,3 @@
+GDI是Windows在绘制图文时的设备上下文环境
+几乎所有绘制都与设备环境(DC)相关，设备环境句柄(HDC)就是用来描述DC的句柄
+获取HDC的方法有两种：一是处理WM_PAINT消息时，通过BeginPaint函数返回，另一种是通过GetDC、GetWindowDC的API函数获取

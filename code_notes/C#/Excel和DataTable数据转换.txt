@@ -1,0 +1,330 @@
+using System;
+using System.Data;
+using System.Configuration;
+using System.Linq;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Xml.Linq;
+using System.Data.OleDb;
+using System.IO;
+/// <summary>
+///Excel 的摘要说明
+/// </summary>
+public class Excel
+{
+
+    //DataTable中的数据导出Excel文件
+    /// <summary>
+    /// 将DataTable中的数据导出到指定的Excel文件中
+    /// </summary>
+    /// <param name="page">Web页面对象</param>
+    /// <param name="tab">包含被导出数据的DataTable对象</param>
+    /// <param name="FileName">Excel文件的名称</param>
+    public static void Export(System.Web.UI.Page page, System.Data.DataTable tab, string FileName)
+    {
+        System.Web.HttpResponse httpResponse = page.Response;
+        System.Web.UI.WebControls.DataGrid dataGrid = new System.Web.UI.WebControls.DataGrid();
+        dataGrid.DataSource = tab.DefaultView;
+        dataGrid.AllowPaging = false;
+        dataGrid.HeaderStyle.BackColor = System.Drawing.Color.Green;
+        dataGrid.HeaderStyle.HorizontalAlign = HorizontalAlign.Center;
+        dataGrid.HeaderStyle.Font.Bold = true;
+        dataGrid.DataBind();
+        httpResponse.AppendHeader("Content-Disposition", "attachment;filename=" + HttpUtility.UrlEncode(FileName, System.Text.Encoding.UTF8)); //filename="*.xls";
+        httpResponse.ContentEncoding = System.Text.Encoding.GetEncoding("GB2312");
+        httpResponse.ContentType = "application/ms-excel";
+        System.IO.StringWriter tw = new System.IO.StringWriter();
+        System.Web.UI.HtmlTextWriter hw = new System.Web.UI.HtmlTextWriter(tw);
+        dataGrid.RenderControl(hw);
+        string filePath = page.Server.MapPath("~/") + "Files//" + FileName;
+        System.IO.StreamWriter sw = System.IO.File.CreateText(filePath);
+        sw.Write(tw.ToString());
+        sw.Close();
+        DownFile(httpResponse, FileName, filePath);
+        httpResponse.End();
+    }
+    private static bool DownFile(System.Web.HttpResponse Response, string fileName, string fullPath)
+    {
+        try
+        {
+            Response.ContentType = "application/octet-stream";
+            Response.AppendHeader("Content-Disposition", "attachment;filename=" +
+            HttpUtility.UrlEncode(fileName, System.Text.Encoding.UTF8) + ";charset=GB2312");
+            System.IO.FileStream fs = System.IO.File.OpenRead(fullPath);
+            long fLen = fs.Length;
+            int size = 102400;//每100K同时下载数据
+            byte[] readData = new byte[size];//指定缓冲区的大小
+            if (size > fLen) size = Convert.ToInt32(fLen);
+            long fPos = 0;
+            bool isEnd = false;
+            while (!isEnd)
+            {
+                if ((fPos + size) > fLen)
+                {
+                    size = Convert.ToInt32(fLen - fPos);
+                    readData = new byte[size];
+                    isEnd = true;
+                }
+                fs.Read(readData, 0, size);//读入一个压缩块
+                Response.BinaryWrite(readData);
+                fPos += size;
+            }
+            fs.Close();
+            System.IO.File.Delete(fullPath);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    //将指定Excel文件中的数据转换成DataTable
+    /// <summary>
+    /// 将指定Excel文件中的数据转换成DataTable对象，供应用程序进一步处理
+    /// </summary>
+    /// <param name="filePath"></param>
+    /// <returns></returns>
+    public static System.Data.DataTable Import(string filePath)
+    {
+        System.Data.DataTable rs = new System.Data.DataTable();
+        bool canOpen = false;
+
+        OleDbConnection conn = new OleDbConnection("Provider=Microsoft.Jet.OLEDB.4.0;" +
+        "Data Source=" + filePath + ";" +
+        "Extended Properties=/"Excel 8.0;/"");
+
+        try//尝试数据连接是否可用
+        {
+            conn.Open();
+            conn.Close();
+            canOpen = true;
+        }
+        catch { }
+
+        if (canOpen)
+        {
+            try//如果数据连接可以打开则尝试读入数据
+            {
+                OleDbCommand myOleDbCommand = new OleDbCommand("SELECT * FROM [Sheet1$]", conn);
+                OleDbDataAdapter myData = new OleDbDataAdapter(myOleDbCommand);
+                myData.Fill(rs);
+                conn.Close();
+            }
+            catch//如果数据连接可以打开但是读入数据失败，则从文件中提取出工作表的名称，再读入数据
+            {
+                string sheetName = GetSheetName(filePath);
+                if (sheetName.Length > 0)
+                {
+                    OleDbCommand myOleDbCommand = new OleDbCommand("SELECT * FROM [" + sheetName + "$]", conn);
+                    OleDbDataAdapter myData = new OleDbDataAdapter(myOleDbCommand);
+                    myData.Fill(rs);
+                    conn.Close();
+                }
+            }
+        }
+        else
+        {
+            System.IO.StreamReader tmpStream = File.OpenText(filePath);
+            string tmpStr = tmpStream.ReadToEnd();
+            tmpStream.Close();
+            rs = GetDataTableFromString(tmpStr);
+            tmpStr = "";
+        }
+        return rs;
+    }
+    /// <summary>
+    /// 将指定Html字符串的数据转换成DataTable对象 --根据“<tr><td>”等特殊字符进行处理
+    /// </summary>
+    /// <param name="tmpHtml">Html字符串</param>
+    /// <returns></returns>
+    private static DataTable GetDataTableFromString(string tmpHtml)
+    {
+        string tmpStr = tmpHtml;
+        DataTable TB = new DataTable();
+        //先处理一下这个字符串，删除第一个<tr>之前合最后一个</tr>之后的部分
+        int index = tmpStr.IndexOf("<tr");
+        if (index > -1)
+            tmpStr = tmpStr.Substring(index);
+        else
+            return TB;
+
+        index = tmpStr.LastIndexOf("</tr>");
+        if (index > -1)
+            tmpStr = tmpStr.Substring(0, index + 5);
+        else
+            return TB;
+
+        bool existsSparator = false;
+        char Separator = Convert.ToChar("^");
+
+        //如果原字符串中包含分隔符“^”则先把它替换掉
+        if (tmpStr.IndexOf(Separator.ToString()) > -1)
+        {
+            existsSparator = true;
+            tmpStr = tmpStr.Replace("^", "^$&^");
+        }
+
+        //先根据“</tr>”分拆
+        string[] tmpRow = tmpStr.Replace("</tr>", "^").Split(Separator);
+
+        for (int i = 0; i < tmpRow.Length - 1; i++)
+        {
+            DataRow newRow = TB.NewRow();
+
+            string tmpStrI = tmpRow[i];
+            if (tmpStrI.IndexOf("<tr") > -1)
+            {
+                tmpStrI = tmpStrI.Substring(tmpStrI.IndexOf("<tr"));
+                if (tmpStrI.IndexOf("display:none") < 0 || tmpStrI.IndexOf("display:none") > tmpStrI.IndexOf(">"))
+                {
+                    tmpStrI = tmpStrI.Replace("</td>", "^");
+                    string[] tmpField = tmpStrI.Split(Separator);
+
+                    for (int j = 0; j < tmpField.Length - 1; j++)
+                    {
+                        tmpField[j] = RemoveString(tmpField[j], "<font>");
+                        index = tmpField[j].LastIndexOf(">") + 1;
+                        if (index > 0)
+                        {
+                            string field = tmpField[j].Substring(index, tmpField[j].Length - index);
+                            if (existsSparator) field = field.Replace("^$&^", "^");
+                            if (i == 0)
+                            {
+                                string tmpFieldName = field;
+                                int sn = 1;
+                                while (TB.Columns.Contains(tmpFieldName))
+                                {
+                                    tmpFieldName = field + sn.ToString();
+                                    sn += 1;
+                                }
+                                TB.Columns.Add(tmpFieldName);
+                            }
+                            else
+                            {
+                                newRow[j] = field;
+                            }
+                        }//end of if(index>0)
+                    }
+
+                    if (i > 0)
+                        TB.Rows.Add(newRow);
+                }
+            }
+        }
+
+        TB.AcceptChanges();
+        return TB;
+    }
+
+    /// <summary>
+    /// 从指定Html字符串中剔除指定的对象
+    /// </summary>
+    /// <param name="tmpHtml">Html字符串</param>
+    /// <param name="remove">需要剔除的对象--例如输入"<font>"则剔除"<font ???????>"和"</font>>"</param>
+    /// <returns></returns>
+    public static string RemoveString(string tmpHtml, string remove)
+    {
+        tmpHtml = tmpHtml.Replace(remove.Replace("<", "</"), "");
+        tmpHtml = RemoveStringHead(tmpHtml, remove);
+        return tmpHtml;
+    }
+    /// <summary>
+    /// 只供方法RemoveString()使用
+    /// </summary>
+    /// <returns></returns>
+    private static string RemoveStringHead(string tmpHtml, string remove)
+    {
+        //为了方便注释，假设输入参数remove="<font>"
+        if (remove.Length < 1) return tmpHtml;//参数remove为空：不处理返回
+        if ((remove.Substring(0, 1) != "<") || (remove.Substring(remove.Length - 1) != ">")) return tmpHtml;//参数remove不是<?????>：不处理返回
+
+        int IndexS = tmpHtml.IndexOf(remove.Replace(">", ""));//查找“<font”的位置
+        int IndexE = -1;
+        if (IndexS > -1)
+        {
+            string tmpRight = tmpHtml.Substring(IndexS, tmpHtml.Length - IndexS);
+            IndexE = tmpRight.IndexOf(">");
+            if (IndexE > -1)
+                tmpHtml = tmpHtml.Substring(0, IndexS) + tmpHtml.Substring(IndexS + IndexE + 1);
+            if (tmpHtml.IndexOf(remove.Replace(">", "")) > -1)
+                tmpHtml = RemoveStringHead(tmpHtml, remove);
+        }
+        return tmpHtml;
+    }
+
+    /// <summary>
+    /// 将指定Excel文件中读取第一张工作表的名称
+    /// </summary>
+    /// <param name="filePath"></param>
+    /// <returns></returns>
+    private static string GetSheetName(string filePath)
+    {
+        string sheetName = "";
+
+        System.IO.FileStream tmpStream = File.OpenRead(filePath);
+        byte[] fileByte = new byte[tmpStream.Length];
+        tmpStream.Read(fileByte, 0, fileByte.Length);
+        tmpStream.Close();
+
+        byte[] tmpByte = new byte[]{Convert.ToByte(11),Convert.ToByte(0),Convert.ToByte(0),Convert.ToByte(0),Convert.ToByte(0),Convert.ToByte(0),Convert.ToByte(0),Convert.ToByte(0),
+Convert.ToByte(11),Convert.ToByte(0),Convert.ToByte(0),Convert.ToByte(0),Convert.ToByte(0),Convert.ToByte(0),Convert.ToByte(0),Convert.ToByte(0),
+Convert.ToByte(30),Convert.ToByte(16),Convert.ToByte(0),Convert.ToByte(0)};
+
+        int index = GetSheetIndex(fileByte, tmpByte);
+        if (index > -1)
+        {
+
+            index += 16 + 12;
+            System.Collections.ArrayList sheetNameList = new System.Collections.ArrayList();
+
+            for (int i = index; i < fileByte.Length - 1; i++)
+            {
+                byte temp = fileByte[i];
+                if (temp != Convert.ToByte(0))
+                    sheetNameList.Add(temp);
+                else
+                    break;
+            }
+            byte[] sheetNameByte = new byte[sheetNameList.Count];
+            for (int i = 0; i < sheetNameList.Count; i++)
+                sheetNameByte[i] = Convert.ToByte(sheetNameList[i]);
+
+            sheetName = System.Text.Encoding.Default.GetString(sheetNameByte);
+        }
+        return sheetName;
+    }
+    /// <summary>
+    /// 只供方法GetSheetName()使用
+    /// </summary>
+    /// <returns></returns>
+    private static int GetSheetIndex(byte[] FindTarget, byte[] FindItem)
+    {
+        int index = -1;
+
+        int FindItemLength = FindItem.Length;
+        if (FindItemLength < 1) return -1;
+        int FindTargetLength = FindTarget.Length;
+        if ((FindTargetLength - 1) < FindItemLength) return -1;
+
+        for (int i = FindTargetLength - FindItemLength - 1; i > -1; i--)
+        {
+            System.Collections.ArrayList tmpList = new System.Collections.ArrayList();
+            int find = 0;
+            for (int j = 0; j < FindItemLength; j++)
+            {
+                if (FindTarget[i + j] == FindItem[j]) find += 1;
+            }
+            if (find == FindItemLength)
+            {
+                index = i;
+                break;
+            }
+        }
+        return index;
+    }
+}

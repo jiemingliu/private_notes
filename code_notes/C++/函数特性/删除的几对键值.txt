@@ -1,0 +1,8 @@
+	addLinesmap.insert(ridgeLine1.ID, ridgeLine1.EndID);     //将几对键值插入到addLinesmap和addVaraintList1中去
+	addLinesmap.insert(ridgeLine2.ID, ridgeLine2.BeginID);
+	addVaraintlist1.push_back(QVariant(ridgeLine1.ID));
+	addVaraintlist1.push_back(QVariant(ridgeLine2.ID));
+	addLinesmap.insert(ridgeLine3.ID, ridgeLine3.EndID);
+	addLinesmap.insert(ridgeLine4.ID, ridgeLine4.BeginID);
+	addVaraintlist2.push_back(QVariant(ridgeLine3.ID));
+	addVaraintlist2.push_back(QVariant(ridgeLine4.ID));

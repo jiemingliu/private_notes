@@ -1,0 +1,21 @@
+#region 清空内存
+[DllImport("kernel32.dll")]
+public static extern bool SetProcessWorkingSetSize(IntPtr process,
+    int minSize,
+    int maxSize
+    );
+/// <summary>
+/// 在占用大量内存的窗体关闭时执行,释放内存
+/// </summary>
+public static void FlushMemory()
+{
+    GC.Collect();
+    GC.WaitForPendingFinalizers();
+    if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+    {
+        SetProcessWorkingSetSize(System.Diagnostics.Process.GetCurrentProcess().Handle, -1, -1);
+    }
+}
+#endregion
+
+实际上SetProcessWorkingSetSize函数只是将该程序暂时用不着的操作的内存从运行内存中移动到硬盘内存中，造成内存已经被清理的假象
