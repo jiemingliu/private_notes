@@ -1,0 +1,72 @@
+图片类
+1，pickpic
+2，PHOTOZOOM PRO，利用插值算法来放大图片，让分辨率较低的图片可以变得很清晰
+3，PPTMinimizer，专门压缩WORD和POWERPOINT文件，压缩率高到吓死人，最高可以达到98%
+4，ppt插件，https://www.islide.cc/
+5，幕布，兼具清单软件和思维导图软件优点，https://mubu.com/
+6，PPT遥控器，http://ppt.baidu.com/
+7，图片拼接，CollageIt Pro，或者Shape Collage Pro（百度网盘）
+8，honeyview，看图，包括动图，另一个图片浏览MassiGra
+9，PaintDotNet，mini版PS
+10，滚动截图网页，FastStone（百度网盘）
+
+
+
+文本工具
+1，minipad2
+2，PDF阅读器：PDX-XChange Viewer
+3，输入法，RIME，http://rime.im/
+4，未验证的全文检索工具，谷歌桌面、FileLocator、DocFetcher
+5，前端er：vs code，webstrom
+
+
+系统工具
+1，压缩工具，Bandizip，7-Zip
+2，系统清理，AdwCleaner，CCleaner
+3，数据恢复，Recuva,https://www.piriform.com/recuva/download，或者易我，http://www.easeus.com.cn/drw/
+4，下载工具，HTTrack：（ 离线浏览器工具，可以从网络下载完整页面内容 ），Internet Download Manager 
+5，卸载软件，lobit Uninstaller
+6，向日葵，远程控制
+7，.flux，显示器色温自动调节
+8，dock，实现类似mac下dock的效果（百度网盘中有）
+9，ADSafe 净网大师
+10，硕鼠或维棠，下载视频网站视频
+11，Clover，类似Chrome的资源管理器，http://cn.ejie.me/
+12，分区助手，磁盘分区工具，http://www.disktool.cn
+13，MadAppLauncher，管理软件启动快捷方式，
+14，Geek Uninstall，卸载程序
+15，Hoekey，全局快捷键管理
+16，Listary，全局本地搜索的便捷工具，http://www.listary.com/
+17，NetSetMan，多网关（或多IP/多DNS）切换
+18，在线书签，https://raindrop.io/
+19，Preme for Windows，增强系统小工具，http://www.premeforwindows.com/
+20，记住系统操作，http://www.manictime.com/
+21，快速复制文件工具，FastCopy
+22，拦截广告，https://www.admuncher.com/
+23，提取文件，从压缩包，exe等等，https://www.legroom.net/software/uniextract
+24，cpu幫手，Process Lasso，https://bitsum.com/
+
+
+
+网站类
+1，office模板，http://www.officeplus.cn/Template/Home.shtml
+2，矢量图标库，http://www.iconfont.cn/
+3，图片素材库，https://pixabay.com/
+4，在线编辑服务 、超级文档库 、安全工作空间，https://uzer.me/
+5，PDF文件转换，https://smallpdf.com/cn
+6，电影，http://dianying.fm
+7，全部格式轉換，http://www.docspal.com/
+8，複雜數學幾何公式計算，http://www.wolframalpha.com/
+
+
+其他
+1，Wayback Machine 是一个互联网备份工具
+2，Potplayer，播放器，调速不变声调
+3，数据化管理，https://www.jiandaoyun.com/
+4，屏幕录制，Bandicam（百度网盘），Apowersoft，https://www.apowersoft.cn/screen-recorder
+5，天象观察，http://www.stellarium.org/zh_CN/
+
+
+
+插件類
+1，Distill Web Monitor，https://distill.io/
