@@ -1,0 +1,54 @@
+1, git 安装完成后执行(--global参数，用了这个参数，表示你这台机器上所有的Git仓库都会使用这个配置)
+	git config --global user.name "Your name"
+	git config --global user.email "Your email"
+2, git Bash 进入需要创建为repository的文件夹
+	git init
+3, 提交
+	git add [files]
+	git commit -m "commit message"
+4,  HEAD 指向当前版本
+	git status 					查看repository的工作区的状态
+	git diff [file] 			查看文件修改状态
+	git diff HEAD -- [file]		查看工作区和版本库最新版本的区别
+	git log 					查看提交日志
+	git log --pretty=oneline	查看提交日志(一行显示)
+	git reflog					查看每一次命令
+5，版本回退
+	git reset --hard [commit_id]
+	git checkout -- [file]		放弃file在工作区的修改
+	
+	放弃提交到缓存区的修改
+	step1: git reset HEAD [file]
+	step2: git checkout -- [file]
+6, 删除
+	git rm [file]
+	git commit -m "commit message"
+7, 链接远程仓库，一般是github
+	step1: 创建ssh key，用户主目录下是否有 .ssh目录，里面是否有 id_rsa 和id_rsa.pub文件，如果不存在，执行一下命令
+		$ ssh-keygen -t rsa -C "email@.com"
+	step2: 登录github，add ssh，将id_rsa.pub里的内容拷贝到Key
+8, 本地到github
+	step1: github创建空仓库，readme.md和gitignore按照默认不勾选
+	step2: git remote add origin [github上的新建空仓库的地址]
+	step3: git push -u origin master 	(第一次加上了-u参数，Git不但会把本地的master分支内容推送的远程新的master分支，还会把本地的master分支和远程的master分支关联起来，在以后的推送或者拉取时就可以简化命令，不加-u参数)
+9, github到本地
+	step1: 切换工作目录，执行命令 git clone [github上非空仓库的地址]
+	github仓库地址支持多种协议，包括https，如  https://github.com/jiemingliu/study_node.js.git
+	但通过ssh支持的原生git协议速度最快，如  git@github.com:jiemingliu/study_node.js.git
+10, 分支
+	HEAD严格来说不是指向提交，而是指向master，master才是指向提交的，所以，HEAD指向的就是当前分支。当新增一个分支时，实际上是新增列一个指针指向和master相同的提交，HEAD再指向新分支指针
+	git branch 						查看分支
+	git branch [branch_name]		创建分支
+	git checkout [branch_name]		切换分支
+	git checkout -b [branch_name]	创建+切换到分支
+	git merge [branch_name]			合并某分支到当前分支
+	git branch -d [branch_name]		删除分支
+	git branch -D <name>			强行删除未合并分支
+	git log --graph --pretty=oneline --abbrev-commit	查看分支合并图
+11, 保存工作现场
+	git stash			保存工作现场，执行之后缓存区是干净的
+	git stash list		查看保存的工作现场列表
+	git stash apply [stash{Num}]				恢复工作现场
+	git stash drop [stash{Num}]					删除工作现场
+	git stash pop [stash{Num}]					恢复并删除工作现场
+	如果只有一个工作现场，可以不带参数，即 [stash{Num}]，其中Num为git stash list查看到的数字
