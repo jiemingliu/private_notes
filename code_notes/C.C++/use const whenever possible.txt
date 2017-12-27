@@ -1,0 +1,58 @@
+1、const识别
+const语法虽然变化多端，但并不莫测高深，
+（1）const出现在星号左边，表示被指物是常量；
+（2）如果出现在星号右边，表示指针自身是常量；
+const int* p和int const* p等同 
+（3）如果出现在星号两边，表示被指物和指针两者都是常量。
+
+2、const成员函数
+将const实施于成员函数的目的，是为了确认该成员函数可作用于const对象身上。这一类成员函数之所以重要，
+基于两个理由。
+第一，它们使class接口比较容易被理解。
+第二，它们使"操作const对象成为可能"。这对编写高效代码是个关键，改善C++程序效率的一个根本办法是pass by
+reference-to-const方式传递对象，而此技术可行的前提是，我们有const成员函数可用来处理取得（并经修饰而成）
+的const对象。 
+
+注意：l两个成员函数如果只是常量性（constness）不同，可以被重载。这实在是一个重要的C++特性。
+
+3、const的理解
+关于const目前有两类的流行概念
+bitwise const（又称physical constness）和logical constness。
+
+bitwise const 阵营的人相信，成员函数只有在不更改对象之任何成员变量（static除外）时才可以说是const。也就是说
+它不更改对象内任何一个bit。这种论点的好处是很容易侦测违反点：编译器只需要寻找成员变量的赋值动作即可。
+bitwise constness正是C++对常量性（constness）的定义，因此const成员函数不可以更改对象内non-static成员变量
+
+
+logical constness：这一派拥护者主张，一个const成员函数可以修改它所处理的对象内的某些bits，但只有在客户端侦测
+不出的情况下才得如此，例如你的CTexrBlock class有可能高速缓存（cache）文本区块的长度以便应付询问：
+class CTexrBlock{
+public:
+ ...
+ std::size_t length() const;
+private:
+ char* pText;
+ std::size_t textLength;	 //last calculated length of textblock。
+ bool lengthIsValid;	 //whether length is currently valid
+};
+
+std::size_t CTextBlock::length() const
+{
+ if(!lengthIsValid){
+  textLength = std::strlen(pText);	//error! can't assign to textLength
+  lengthIsValid = true;	 //and LengthIsValid in a const member function
+ }
+ 
+ return textLength;
+}
+length的实现当然不是bitwise cosnt，因为textLength和lengthIsValid都可能被修改。这两笔数据被修改对
+const CTextBlock而言虽然可以接受，但编译器不同意。它们坚持bitwise constness。
+
+解决办法很简单：利用C++的一个与const相关的摆动场：mutable（可变的）。mutable释放掉non-static
+成员变量的bitwise constness约束
+
+总结：
+1、将某些东西声明为const可帮助编译器侦测出错误用法。const可被施加于任何作用域内的对象、函数参数、函数返回类型、
+成员函数本体。
+2、编译器强制实施bitwise constness，但你编写程序时应该使用"概念上的常量性"（Logical constness）
+3、当const和non-const成员函数有着实质等价的实现时，令non-const版本调用const版本可以避免代码重复。

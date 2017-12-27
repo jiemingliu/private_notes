@@ -1,0 +1,17 @@
+	const char* str = "D:\\CurveData\\2492.txt";
+	std::locale::global(std::locale(""));
+	std::ifstream ifs(str);
+	std::locale::global(std::locale("C"));
+	struct skpoint 
+	{
+		double x;
+		int y;
+	};
+	std::vector<skpoint> pointall;
+	std::string strLine;
+	while (getline(ifs, strLine))
+	{
+		skpoint temppoint;
+		sscanf_s(strLine.c_str(),"%lf %d",&temppoint.x,&temppoint.y);
+		pointall.push_back(temppoint);
+	}

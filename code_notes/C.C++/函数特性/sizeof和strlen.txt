@@ -1,0 +1,67 @@
+#include <iostream>
+#include <stdio.h>
+#include <string>
+using namespace std;
+void fun(char c[])
+{    printf("%d\n" , sizeof(c)); }
+
+void fun2(char &c)
+{    printf("%d\n" , sizeof(c)); }
+
+void fun3(char(&c)[9])
+{    printf("%d\n" , sizeof(c)); 
+cout<<c<<endl;}
+
+int main()
+{
+	char c[] = "12345678";
+	//  char *c = "12345678";
+
+	printf("%d\n" , sizeof(c)); //9 元素个数包括\0
+	fun(c);         //4 数组传递的首地址--指针
+	fun2(*(c+1));   //1  *(c+1)表示传递的一个字符
+	fun3(c);        //9  对数组求sizeof
+	return 0;
+}
+
+注释：
+sizeof返回类型为size_t，单位为字节
+1.char类型sizeof为1
+2. 对引用类型sizeof返回引用类型对象的内存大小，上面char &c为1个元素为1，但是char(&c)[9]为整个数组为9，
+由于是c型字符串，所以还有一个\0。
+3. 对指针做sizeof，得到4。但是要获得指针所指对象的大小必须对指针解引用。
+4. 对数组做sizeof相当于对所以元素做sizeof后再相加。
+复制代码
+ 
+
+如果对上面的char c[] = "12345678"; 求strlen那么得到的结果是8不包含null结束符。
+
+注：
+
+1. 在使用处理c风格的字符串的标准库函数的时候，牢记字符串必须以结束符null结束。上面char c[] = "12345678"; 中应该为char c[9] = "12345678";
+
+2. strlen总是假定其参数字符串以null字符结束，他从开始指向的字符开始一直搜索到结束符，返回这个内存空间中有多少个字符。
+
+strlen与sizeof的区别
+
+  1.从功能定义上，strlen函数，用来求字符串的长度，sizeof函数是用来求指定变量或变量类型等所占用内存的大小；
+
+  2.sizeof是运算符，而strlen是C库函数strlen只能用char*做参数，且以'/0'结尾的；
+
+  对于静态数组处理：
+
+     char str[20]="0123456789";
+
+     strlen(str)=10;   //表示数组中字符串的长度
+
+     sizeof(str)=20;   //表示数组变量分配的长度
+
+  对于指针处理：
+
+     char *str="0123456789";
+
+     strlen(str)=10;     //表示字符串的长度
+
+     sizeof(str)=4;      //表示指针变量的所占内存大小
+
+     sizeof(*str)=1;     //表示'0'这个字符变量的所占内存大小
