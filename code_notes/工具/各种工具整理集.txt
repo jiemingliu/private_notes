@@ -45,6 +45,9 @@
 22，拦截广告，https://www.admuncher.com/
 23，提取文件，从压缩包，exe等等，https://www.legroom.net/software/uniextract
 24，cpu幫手，Process Lasso，https://bitsum.com/
+25，鼠标手势软件 WGestures
+26，剪贴板 Ditto
+27，快捷查找工具软件 Wox
 
 
 
