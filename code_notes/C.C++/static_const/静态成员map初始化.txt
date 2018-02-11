@@ -1,0 +1,92 @@
+c++类中静态map的声明和初始化
+1.支持c++11的写法
+//MyClass.h
+class MyClass {
+public:
+      typedef std::map<std::string, int> OpMap;
+      static OpMap opMap_;
+};
+
+//MyClass.cpp
+map<T,T> opMap_={
+	{key1,value1},
+	{key2,value2},
+	{key3,value3}
+}
+
+2.不支持c++11的写法
+//MyClass.h
+class MyClass {
+public:
+      typedef std::map<std::string, int> OpMap;
+      static OpMap opMap_;
+private:
+      static OpMap init_map() {
+          OpMap some_map;
+          some_map["x"] = 1;
+          return some_map;
+      }
+};
+
+//MyClass.cpp
+MyClass::OpMap MyClass::opMap_ = init_map();
+
+3. static map中保存成员函数指针的写法
+//A.h
+class A{
+public:
+	void func1();
+	void func2();
+
+private:
+	typedef void(A::*func)(void);
+	typedef std::map<std::string,func> OpMap;
+	static OpMap opMap_;
+};
+
+//A.cpp
+A::OpMap A::opMap_{
+	{string1,&A::func1},
+	{string2,&A::func2}
+};
+
+4.Works fine without C++11
+class MyClass {
+    typedef std::map<std::string, int> MyMap;
+
+    struct T {
+        const char* Name;
+        int Num;
+
+        operator MyMap::value_type() const {
+            return std::pair<std::string, int>(Name, Num);
+        }
+    };
+
+    static const T MapPairs[];
+    static const MyMap TheMap;
+};
+
+const MyClass::T MyClass::MapPairs[] = {
+    { "Jan", 1 }, { "Feb", 2 }, { "Mar", 3 }
+};
+
+const MyClass::MyMap MyClass::TheMap(MapPairs, MapPairs + 3);
+
+5. 非static map 成员变量的写法
+//A.h
+class A{
+public:
+	void getTheTruthFunc(std::string);
+private:
+	typedef void(A::*func)(void);
+	typedef std::map<std::string,func> OpMap;
+	OpMap opMap_;
+}
+
+初始化则同寻常变量，访问则用如下方法：
+//A.cpp
+void A::getTheTruthFunc(std::string str){
+	if(opMap_.find(str)==opMap_.end()) return;
+	(this->*opMap_[str])();
+}
