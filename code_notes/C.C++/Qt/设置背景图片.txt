@@ -1,0 +1,93 @@
+设置背景图片的三种方式（setAutoFillBackground）
+注意事项：路径不支持 绝对路径 例如：F:\qt\image\a.jpg  背景被刷为黑色
+补充：设置背景颜色 palette.setColor(QPalette::Background, QColor(192,253,123));
+
+1. QPalette的方法
+基本步骤：
+首先设置autoFillBackground属性为真
+然后定义一个QPalette对象
+设置QPalette对象的背景属性（颜色或者图片）
+最后设置QWidget对象的QPalette
+QWidget *widget=new QWidget;
+widget->autoFillBackground(true);
+QPalette palette;
+palette.setColor(QPalette::Background,QColor(192,253,123));
+//palette.setBrush(QPalette::Background,QBrush(QPixmap(":/background.png")));
+widget->setPalette(palette);
+
+2.setStyleSheet方法(非常好用的方法)
+#include <QApplication>
+#include <QtGui>
+
+int main(int argc, char *argv[])
+{
+ QApplication app(argc,argv);
+ QFrame *frame = new QFrame;
+ frame->setObjectName("myframe");
+ frame->resize(400,700);
+ frame->setStyleSheet("QFrame#myframe{border-image:url(images/frame.png)}" );
+ frame->show();
+
+ return app.exec();
+}
+
+注意:设置ObjectName后，才能保证setStyleSheet 只作用在我们的frame上，不影响其子控件的背景设置。之所以用border-image而不用background-image，还是上面的问题，用 background-image不能保证图片大小和控件大小一致，图片不能完全显示，这个以后再补充了，现在还没有找到方法。
+
+3.paintEvent事件方法
+class MyFrame : public QWidget
+{
+public:
+ MyFrame();
+ void paintEvent(QPaintEvent *event);
+};
+
+#endif // MYFRAME_H
+
+//myframe.cpp文件
+#include "myframe.h"
+
+MyFrame::MyFrame()
+{
+}
+
+void MyFrame::paintEvent(QPaintEvent *event)
+{
+ QPainter painter(this);
+ painter.drawPixmap(0,0,400,700,QPixmap("images/frame.png"));
+}
+
+//main.cpp文件
+#include <QApplication>
+#include <QtGui>
+
+#include "myframe.h"
+
+int main(int argc, char *argv[])
+{
+ QApplication app(argc,argv);
+ 
+ MyFrame *frame = new MyFrame;
+ frame->resize(400,700);
+ frame->show();
+
+ return app.exec();
+}
+效果如下：
+
+注：跟前面一样的效果吧，与前面的差别就是这个背景图片不随着窗口的大小而变化，因为它的固定大小被设置成(400，700)了。重写QWidget的paintEvent事件，当控件发生重绘事件，比如show()时，系统就会自动调用paintEvent函数。
+
+
+
+好了，上面是三种设置背景图片的方法，下面我要说一个设置QPushButton的背景图片的方法，用的是setIcon方法(其实QPushButton设置背景图片也可以用前面三种方法的，不过现在这种Icon方法的看起来也不错)
+
+ QPushButton * button0 = new QPushButton(frame);
+
+ button0->setGeometry(60,150,68,68);
+
+ QIcon icon;
+ QPixmap pixmap0("images/SMS.png");
+ icon.addPixmap(pixmap0);
+ button0->setIcon(icon);
+ button0->setIconSize(QSize(68,68));
+ 
+ 另外如果图片不能铺满pushbutton，可以用QPixmap先对图片进行缩放

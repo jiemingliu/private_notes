@@ -60,6 +60,7 @@
 6，电影，http://dianying.fm
 7，全部格式轉換，http://www.docspal.com/
 8，複雜數學幾何公式計算，http://www.wolframalpha.com/
+9,https://cc.ddder.us/htm_data/7/1803/3023312.html
 
 
 其他
