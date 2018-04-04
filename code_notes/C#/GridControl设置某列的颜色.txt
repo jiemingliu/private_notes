@@ -1,0 +1,11 @@
+this.gridControl1.LookAndFeel.Style = DevExpress.LookAndFeel.LookAndFeelStyle.Flat;
+this.gridControl1.LookAndFeel.UseDefaultLookAndFeel = false;
+
+this.gridView1.RefreshData();
+this.gridView1.Columns[2].OptionsColumn.AllowEdit = false;
+this.gridView1.Columns[2].AppearanceHeader.Options.UseBackColor = true;
+this.gridView1.Columns[2].AppearanceHeader.BackColor = System.Drawing.Color.FromArgb(244, 244, 244);
+this.gridView1.Columns[2].AppearanceHeader.ForeColor = System.Drawing.Color.FromArgb(160, 160, 160);
+
+this.gridView1.Columns[2].AppearanceCell.BackColor = System.Drawing.Color.FromArgb(244, 244, 244);
+this.gridView1.Columns[2].AppearanceCell.ForeColor = System.Drawing.Color.FromArgb(160, 160, 160);

@@ -1,0 +1,7 @@
+1,开始-> vs20xx -> vs tools -> vs20xx x86(x64)本机工具命令提示
+2，进入boost文件根目录，执行启动编译器命令  bootstrap.bat
+3, 执行编译命令,msvc版本对应vs版本，比如这里是vs2012，
+bjam stage --toolset=msvc-11.0 architecture=x86 address-model=64 --without-(不编译的库) --with-(编译的库) link=static runtime-link=shared runtime-link=static debug release
+
+
+例如：bjam --toolset=msvc-11.0 architecture=x86 address-model=64 --with-iostreams --with-serialization debug release --stagedir="E:\PorositySimulation_x64\GSThirdParty\BOOST\lib\x64\Debug" link=static runtime-link=shared runtime-link=static

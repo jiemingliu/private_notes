@@ -1,0 +1,43 @@
+vs2008-ifstream打开中文路径报错
+该库操作文件是使用的std::ifstream。在我给文件生成签名的时候，每每碰到中文路径名就出错，后来跟进库代码一看是打开文件的时候出错。
+
+它有一个将传入的char字符串文件名转换为UNICODE的wchar_t字符串这样一个过程;
+
+解决办法：
+1、使用C语言的函数设置为中文运行环境
+
+setlocale(LC_ALL, "Chinese-simplified");
+其中参数一有以下几个值：
+
+/* Locale categories */
+
+#define LC_ALL          0
+#define LC_COLLATE      1
+#define LC_CTYPE        2
+#define LC_MONETARY     3
+#define LC_NUMERIC      4
+#define LC_TIME         5
+
+#define LC_MIN          LC_ALL
+#define LC_MAX          LC_TIME
+
+这些值的意义可以在MSDN当中查到。
+从上面所贴出来的代码可以知道wbstowcs_s方法依赖着locale的LC_CTYPE分类的数值。
+
+2、使用STL函数设置为系统语言环境
+
+std::locale::global(std::locale(""));
+建议用这个方法，因为更C++一些，而且可以很容易的恢复之前的locale，以下会说到这个。
+
+最终的解决方法：
+经过了我的测试，两种方法都是可用的。
+但是，接着又有问题出现了，std::cout输出中文时候，中文是输出不了的！这可真是令人烦扰了。要解决这个问题那么就只能是将代码页再设置回去了，用以下方法可以很好解决问题。
+
+    //设置代码页为简体中文，936是简体中文的代码页。
+    std::locale loc1 = std::locale::global(std::locale(".936"));
+{
+    // 在这里使用std::ifstream 或者 std::fstream
+{color:#000000}} 
+
+    //恢复原来的代码页
+    std::locale::global(std::locale(loc1));

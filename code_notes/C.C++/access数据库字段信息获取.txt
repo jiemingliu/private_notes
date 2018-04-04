@@ -1,0 +1,141 @@
+
+void CDataControl::GetFieldNameCn(const CString& sTableName,CADORecordset* pAdoAccess,const CString& sNameEn, CString& sNameCn)
+{
+	SAFEARRAY   FAR*   psa   =   NULL; 
+	SAFEARRAYBOUND   rgsabound; 
+	_variant_t     var; 
+	_variant_t     Array; 
+	rgsabound.lLbound   =   0; 
+	rgsabound.cElements   =   4; 
+	psa   =   SafeArrayCreate(VT_VARIANT,   1,   &rgsabound); 
+	var.vt   =   VT_EMPTY; 
+	long   ix; 
+	ix   =   0; 
+	SafeArrayPutElement(psa,   &ix,   &var); 
+
+	ix=   1; 
+	SafeArrayPutElement(psa,   &ix,   &var); 
+
+	ix   =   2; 
+	var.vt   =   VT_BSTR; 
+	var.bstrVal   =sTableName.AllocSysString();		//表名  sTableName 
+	SafeArrayPutElement(psa,   &ix,   &var); 
+
+	var.vt   =   VT_BSTR; 
+	ix   =   3; 
+	var.bstrVal   =sNameEn.AllocSysString();//字段名
+	SafeArrayPutElement(psa,   &ix,   &var); 
+
+	Array.vt   =   VT_ARRAY|VT_VARIANT; 
+	Array.parray   =   psa;   
+
+	pAdoAccess->m_pRecordset   =   pAdoAccess->GetActiveConnection()->OpenSchema(adSchemaColumns,&Array);  
+
+	Field *fd = pAdoAccess->m_pRecordset->Fields->GetItem("DESCRIPTION");
+	if (fd->GetValue().vt != VT_NULL)
+	{
+		_bstr_t  column_discription = fd->Value;
+		CString sNote;
+		sNote.Format(_T("%s"), (LPCTSTR)column_discription);
+		sNameCn =  (LPCTSTR)column_discription;
+	}
+	else
+	{
+		sNameCn = sNameEn;
+	}
+}
+
+BOOL CDataControl::GetFileNULL(const CString& sTableName,const CString& sFileNameEN,CString& sFileNameCN,CADORecordset* pAdoAccess,BOOL& ISNullSet, int& OrdinalPostion)
+{
+	SAFEARRAY   FAR*   psa   =   NULL; 
+	SAFEARRAYBOUND   rgsabound; 
+	_variant_t     var; 
+	_variant_t     Array; 
+	rgsabound.lLbound   =   0; 
+	rgsabound.cElements   =   4; 
+	psa   =   SafeArrayCreate(VT_VARIANT,   1,   &rgsabound); 
+	var.vt   =   VT_EMPTY; 
+	long   ix; 
+	ix   =   0; 
+	SafeArrayPutElement(psa,   &ix,   &var); 
+
+	ix=   1; 
+	SafeArrayPutElement(psa,   &ix,   &var); 
+
+	ix   =   2; 
+	var.vt   =   VT_BSTR; 
+	var.bstrVal   =sTableName.AllocSysString();		//表名  sTableName 
+	SafeArrayPutElement(psa,   &ix,   &var); 
+
+	var.vt   =   VT_BSTR; 
+	ix   =   3; 
+	var.bstrVal   =sFileNameEN.AllocSysString();//字段名
+	SafeArrayPutElement(psa,   &ix,   &var); 
+
+	Array.vt   =   VT_ARRAY|VT_VARIANT; 
+	Array.parray   =   psa;   
+
+	pAdoAccess->m_pRecordset   =   pAdoAccess->GetActiveConnection()->OpenSchema(adSchemaColumns,&Array);  
+	//IS_NULL = 1 表示字段可以为空   0 表示必填
+	ISNullSet = (pAdoAccess->m_pRecordset->Fields->GetItem("IS_NULLABLE")->Value.boolVal == -1)?TRUE:FALSE;//是否允许为空
+	_bstr_t  column_name = pAdoAccess->m_pRecordset->Fields->GetItem("COLUMN_NAME")->Value;//字段名
+	OrdinalPostion = pAdoAccess->m_pRecordset->Fields->GetItem("ORDINAL_POSITION")->Value;//字段序号
+
+	Field *fd = pAdoAccess->m_pRecordset->Fields->GetItem("DESCRIPTION");
+	if (fd->GetValue().vt != VT_NULL)
+	{
+		_bstr_t  column_discription = fd->Value;
+		CString sNote;
+		sNote.Format(_T("%s"), (LPCTSTR)column_discription);
+		sFileNameCN =  (LPCTSTR)column_discription;
+	}
+	else
+	{
+		sFileNameCN = sFileNameEN;
+	}
+
+	//int  NUMERIC_PRECISION = m_pRecordset->Fields->GetItem("NUMERIC_PRECISION")->Value;
+	//int  NUMERIC_SCALE = m_pRecordset->Fields->GetItem("NUMERIC_SCALE")->Value;
+
+
+	return TRUE;
+}
+
+BOOL CDataControl::GetFilePkName(const CString& sTableName,std::vector<CString>& sPkName,CADORecordset* pAdoAccess)
+{
+	SAFEARRAY   FAR*   psa   =   NULL; 
+	SAFEARRAYBOUND   rgsabound; 
+	_variant_t     var; 
+	_variant_t     Array; 
+	rgsabound.lLbound   =   0; 
+	rgsabound.cElements   =   3; 
+	psa   =   SafeArrayCreate(VT_VARIANT,   1,   &rgsabound); 
+	var.vt   =   VT_EMPTY; 
+	long   ix; 
+	ix   =   0; 
+	SafeArrayPutElement(psa,   &ix,   &var); 
+
+	ix=   1; 
+	SafeArrayPutElement(psa,   &ix,   &var); 
+
+	ix   =   2; 
+	var.vt   =   VT_BSTR; 
+	var.bstrVal   =sTableName.AllocSysString();		//表名  sTableName 
+	SafeArrayPutElement(psa,   &ix,   &var); 
+
+	Array.vt   =   VT_ARRAY|VT_VARIANT; 
+	Array.parray   =   psa;   
+
+	pAdoAccess->m_pRecordset   =   pAdoAccess->GetActiveConnection()-> OpenSchema(adSchemaPrimaryKeys,&Array);  //adSchemaColumns
+
+	while(!pAdoAccess->IsEOF())
+	{
+		_bstr_t  column_name = pAdoAccess->m_pRecordset->Fields->GetItem("COLUMN_NAME")->Value;
+		_bstr_t   column_PK=   pAdoAccess->m_pRecordset-> Fields-> GetItem( "PK_NAME")-> Value; 
+
+		sPkName.push_back((LPCTSTR)column_name);
+		pAdoAccess->MoveNext();
+	}
+
+	return TRUE;
+}

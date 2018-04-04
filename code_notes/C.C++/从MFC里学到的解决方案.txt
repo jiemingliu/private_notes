@@ -1,0 +1,7 @@
+1,执行时期类型判断的实现方法(RTTI)
+通过构建类型型录网和RuntimeClass，构建类型型录网的方式是编写宏命令，宏命令获取类名，每个类声明时和cpp文件中，添加这个宏，另外RuntimeClass记录串行元素，将每个使用类宏的类串起来，在之后可以在这个串中便利查找这些类名
+2，动态生成对象
+编写宏命令，宏命令一般是new对象，该宏使用到需要动态生成的类的声明和cpp中，通过结合第一点中的RTTI，该类型在RuntimeClass中添加创建对象的方法
+3，消息映射
+struct MSGMAP_ENTRY{UINT nMessage;LONG(*Pfn)(HWND,UINT,WPARAM,LPARAM);};
+通过函数指针的方式，形成消息映射

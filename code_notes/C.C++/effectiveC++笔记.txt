@@ -1,0 +1,10 @@
+1，C++主要的四个次语言
+1，c
+2，object_oriented c++
+3，std
+4，template c++
+对内置的c语言，使用pass-by-value通常比pass-by-reference更高效。从c语言到object_oriented c++时，pass-by-reference-to-const更好，template c++也是如此。stl的迭代器和函数对象(由c指针塑造成)，又是使用pass-by-value更高效
+
+2，尽量用const，enum，inline代替#define，的意思是说"以编译器替换掉预处理器"
+1，对于单纯常数，尽量以const，enum代替#define
+2，对于形似函数的宏(macros),尽量以inline函数代替#define

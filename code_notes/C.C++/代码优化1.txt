@@ -1,0 +1,415 @@
+1.	过长代码的处理
+GstProfilePaneViewOper::resetMarkColor(m_pView,prop.markprop().linestyle().color(),prop.markprop().fillstyle().purecolor());
+----------------------------------------------------------------------------------------------------------------------------------
+GstProfilePaneViewOper::resetMarkColor(m_pView,prop.markprop().linestyle().color(),
+                                       prop.markprop().fillstyle().purecolor());
+                                       
+2.	局部变量
+bool bEnable = pWell->isEnable();
+// 刷新井位
+tmp.brushWell(m_pBrushWell, pWell);
+
+WellGlobalProperty::PropertyWell* pProp = dynamic_cast<WellGlobalProperty::PropertyWell*>(const_cast<Message*>(&pWell->getProperty()));
+pProp->set_benable(bEnable);
+----------------------------------------------------------------------------------------------------------------------------------
+// 刷新井位
+tmp.brushWell(m_pBrushWell, pWell);
+
+WellGlobalProperty::PropertyWell* pProp = dynamic_cast<WellGlobalProperty::PropertyWell*>(const_cast<Message*>(&pWell->getProperty()));
+pProp->set_benable(pWell->isEnable());
+==================================================================================================================================
+template<typename _TargetMsgType>
+_TargetMsgType* castProtoMsg(const google::protobuf::Message& msg)
+{
+    return static_cast<_TargetMsgType*>(const_cast<google::protobuf::Message*>(&msg));
+}
+
+WellGlobalProperty::PropertyWell* prop = castProtoMsg<WellGlobalProperty::PropertyWell*>(pWell->getProperty());
+==================================================================================================================================
+using namespace WellGlobalProperty;
+PropertyWell* prop = castProtoMsg<PropertyWell*>(pWell->getProperty());
+==================================================================================================================================
+auto* prop = castProtoMsg<PropertyWell*>(pWell->getProperty());
+
+3、指针判断
+	if (pTrack == nullptr)
+	{
+		return false;
+	}
+----------------------------------------------------------------------------------------------------------------------------------
+	if (!pTrack)
+	{
+		return false;
+	}
+	
+4、语句结束符号
+                    ExportLas1 las = new ExportLas1(filePath, dt,"")
+                   ;las.ExportLogLasFile();   
+                   
+5、字符串输出
+           string str1 = "# LAS format log file from IWD";
+           string str2 = "# Project units are specified as depth units";
+           string str3 = "#==================================================================";
+           string str4 = "~Version information";
+           string str5 = "VERS.   2.0:";
+           string str6 = "WRAP.   NO:";
+           string str7 = "#==================================================================";
+           string str8 = "~Well";
+           _sw.WriteLine(str1);
+           _sw.WriteLine(str2);
+           _sw.WriteLine(str3);
+           _sw.WriteLine(str4);
+           _sw.WriteLine(str5);
+           _sw.WriteLine(str6);
+           _sw.WriteLine(str7);
+           _sw.WriteLine(str8);
+----------------------------------------------------------------------------------------------------------------------------------
+public void outputStrs(StreamWriter sw, string[] strs)
+{
+    for (int index = 0; index < strs.Length; ++index )
+    {
+        sw.WriteLine(strs[index]);
+    }
+}
+
+string[] strs = new string[] {
+    "# LAS format log file from IWD",
+    "# Project units are specified as depth units",
+    ...
+};
+
+outputStrs(_sw, strs);
+==================================================================================================================================
+StringBuilder builder = new StringBuilder();
+builder.AppendLine("# LAS format log file from IWD");
+builder.AppendFormat("STRT .{0}\t{1} :", deptuint, startDept);
+...
+
+sw.Write(builder.ToString());
+==================================================================================================================================
+_sw.Write("# LAS format log file from IWD\
+# Project units are specified as depth units\
+#==================================================================\
+~Version information\
+VERS.   2.0:\
+WRAP.   NO:\
+#==================================================================\
+~Well");
+
+6、Xml文件读写
+    [XmlRoot("Modules")]
+    public class ModuleExeConfig
+    {
+        [XmlAttribute]
+        public string ModuleTitle { get; set; }
+
+        [XmlElement("EnableModule")]
+        public List<SINGLE_MODULE_SIGN> EnableModules { get; set; }
+    }
+    
+    XmlConfigSerializer.LoadConfigFile<ModuleExeConfig>(string.Format("{0}{1}", AppDomain.CurrentDomain.BaseDirectory, CONFIG_FILE_PATH));
+    XmlConfigSerializer.SaveConfigFile<ModuleExeConfig>(configObj, string.Format("{0}{1}", AppDomain.CurrentDomain.BaseDirectory, CONFIG_FILE_PATH));
+    
+7、文件保存打开对话框
+DialogResult result = saveDlg.ShowDialog();
+if (result == DialogResult.OK)
+{
+    string filePath = saveDlg.FileName;
+    
+    if (saveDlg.FilterIndex == 1)
+    {
+       if (!filePath.EndsWith(".xls"))
+       {
+           filePath = filePath + ".xls";
+    
+       } 
+       ExcelOperator.OutputToExcel(dt, filePath);
+    
+    }
+    else
+    {
+       if (!filePath.EndsWith(".las"))
+       {
+           filePath = filePath + ".las";
+    
+       } 
+       ExportLas1 las = new ExportLas1(filePath, dt, "") ;
+       las.ExportLogLasFile();
+    }
+}
+----------------------------------------------------------------------------------------------------------------------------------
+if (DialogResult.OK != saveDlg.ShowDialog())
+{
+    return ;
+}
+
+string filePath = saveDlg.FileName;
+
+if (saveDlg.FilterIndex == 1)
+{
+   ExcelOperator.OutputToExcel(dt, filePath);
+}
+else
+{
+   ExportLas1 las = new ExportLas1(filePath, dt, "") ;
+   las.ExportLogLasFile();
+}
+==================================================================================================================================
+string fileExt = Path.GetExtension(filePath);
+
+8、控件数据转换字符串
+barEdit_stratumType.EditValue.ToString()
+----------------------------------------------------------------------------------------------------------------------------------
+Convert.ToString(barEdit_stratumType.EditValue)
+
+9、readonly对象
+private readonly TreeControlObject _treeControlObject = new TreeControlObject();
+----------------------------------------------------------------------------------------------------------------------------------
+public static class TreeControlObject
+
+10、路径分隔符
+path + "\\" + colorFile;
+----------------------------------------------------------------------------------------------------------------------------------
+path + Path.DirectorySeparatorChar + colorFile
+
+11、消息提示
+DialogResult dialogResult = XtraMessageBox.Show("关闭窗体前，是否保存当前图件", "提示", essageBoxButtons, MessageBoxIcon.Question);
+----------------------------------------------------------------------------------------------------------------------------------
+MessagePrompt.Question("关闭窗体前，是否保存当前图件");
+
+12、条件判断
+if (dialogResult == DialogResult.Yes)
+{
+    Save3DForm(form);
+}
+else if (dialogResult == DialogResult.Cancel)
+{
+    e.Cancel = true;
+}
+----------------------------------------------------------------------------------------------------------------------------------
+switch...case
+
+13、LINQ语句及逻辑说明
+private void SetNodeId(ref List<SaveTreeObject> listData)
+{
+    List<int> parentList = listData.Where(l => l.Tag == "MapWindownFolder").Select(s => s.Id).ToList();
+    foreach (int parentId in parentList)
+    {
+        List<SaveTreeObject> list = listData.Where(l => l.ParentId == parentId).ToList();
+        List<SaveTreeObject> indexList = list.OrderBy(l => l.Index).ToList();
+        List<SaveTreeObject> dataList=list.OrderBy(l => l.Id).ToList();
+        for (int i = 0; i < list.Count; i++)
+        {
+            SaveTreeObject data = indexList[i];
+            listData.First(l => l.DataGuid == data.DataGuid).Id = dataList[i].Id;
+        }
+    }
+}
+----------------------------------------------------------------------------------------------------------------------------------
+private void SetNodeId(List<SaveTreeObject> listData)
+{
+    // 对父节点下兄弟节点按照Index设置ID
+    foreach (var parentID in listData.Where(l => l.Tag == "MapWindownFolder").Select(l => l.Id))
+    {
+        OrderIdByByDataIndex(listData.Where(l => l.ParentId == parentID));
+    }
+}
+
+private void OrderIdByByDataIndex(IEnumerable<SaveTreeObject> siblingDatas)
+{
+    // 根据Index排序
+    var iterByIndex = siblingDatas.OrderBy(l => l.Index).GetEnumerator();
+    // 根据Id排序
+    var iterById = siblingDatas.OrderBy(l => l.Id).GetEnumerator();
+
+    while (iterByIndex.MoveNext())
+    {
+        iterById.MoveNext();
+        // 错误！遍历循环过程中会修改iterById中的对象ID
+        iterByIndex.Current.Id = iterById.Current.Id;
+    }
+}
+
+14、修改函数声明及定义注释
+	/// <summary>
+	/// 移除场景对象
+	/// </summary>
+	void removeSceneProp(const std::string& objName, bool tempData = true);
+
+15、重复代码精简
+void SectionSceneMgr::intiVtkLight()
+{
+	//m_renderer->SetLightFollowCamera(true);
+
+	vtkSmartPointer<vtkLight> light = vtkSmartPointer<vtkLight>::New();
+	light->SetPosition(0, 0, -1);
+	light->SetColor(1.,1.,1.);
+	light->SetFocalPoint(m_renderer->GetActiveCamera()->GetFocalPoint());
+	m_renderer->AddLight(light);
+
+	vtkSmartPointer<vtkLight> light1 = vtkSmartPointer<vtkLight>::New();
+	light1->SetPosition(0, 0, 1);
+	light1->SetColor(1.,1.,1.);
+	light1->SetFocalPoint(m_renderer->GetActiveCamera()->GetFocalPoint());
+	m_renderer->AddLight(light1);
+
+	vtkSmartPointer<vtkLight> light2 = vtkSmartPointer<vtkLight>::New();
+	light2->SetPosition(0, 1, 0);
+	light2->SetColor(1.,1.,1.);
+	light2->SetFocalPoint(m_renderer->GetActiveCamera()->GetFocalPoint());
+	m_renderer->AddLight(light2);
+
+	vtkSmartPointer<vtkLight> light3 = vtkSmartPointer<vtkLight>::New();
+	light3->SetPosition(0, -1, 0);
+	light3->SetColor(1.,1.,1.);
+	light3->SetFocalPoint(m_renderer->GetActiveCamera()->GetFocalPoint());
+	m_renderer->AddLight(light3);
+
+	vtkSmartPointer<vtkLight> light4 = vtkSmartPointer<vtkLight>::New();
+	light4->SetPosition(1, 0, 0);
+	light4->SetColor(1.,1.,1.);
+	light4->SetFocalPoint(m_renderer->GetActiveCamera()->GetFocalPoint());
+	m_renderer->AddLight(light4);
+
+	vtkSmartPointer<vtkLight> light5 = vtkSmartPointer<vtkLight>::New();
+	light5->SetPosition(-1, 0, 0);
+	light5->SetColor(1.,1.,1.);
+	light5->SetFocalPoint(m_renderer->GetActiveCamera()->GetFocalPoint());
+	m_renderer->AddLight(light5);
+}
+----------------------------------------------------------------------------------------------------------------------------------
+const int LIGHT_NUM = 6;
+const double LIGHT_POS[LIGHT_NUM][3] = {
+    {  0,  0, -1 },
+    {  0,  0,  1 },
+    {  0,  1,  0 },
+    {  0, -1,  0 },
+    {  1,  0,  0 },
+    { -1,  0,  0 },
+};
+
+void SectionSceneMgr::intiVtkLight()
+{
+    for (int index = 0; index < LIGHT_NUM ; ++index)
+    {
+    	createLight(LIGHT_POS[index], LIGHT_CLR[index]);
+    }
+}
+
+void SectionSceneMgr::createLight(const double pos[3], const float clr[3])
+{
+	vtkSmartPointer<vtkLight> light = vtkSmartPointer<vtkLight>::New();
+	light->SetPosition(pos[0], pos[1], pos[2]);
+	light->SetColor(clr[0], clr[1], clr[2]);
+	light->SetFocalPoint(m_renderer->GetActiveCamera()->GetFocalPoint());
+	m_renderer->AddLight(light);
+}
+
+16、方法注释说明用途及实测效果
+edgeMapper->ImmediateModeRenderingOn();
+edgeMapper->GlobalImmediateModeRenderingOn();
+jPEGReader->ReleaseDataFlagOn();
+
+17、容器大小判断
+if (pSelectWell->getSlots().size() <= 0)
+----------------------------------------------------------------------------------------------------------------------------------
+if (pSelectWell->getSlots().empty())
+
+18、内联函数
+//返回对应深度类型值
+static double MDDepthValue(const depthData& data);
+double MDDepthValue(const depthData& data)
+{
+	return data.ddetphmd();
+}
+----------------------------------------------------------------------------------------------------------------------------------
+static double MDDepthValue(const depthData& data) {
+	return data.ddetphmd();
+}
+
+19、公共常量及变量定义
+// CalaDepthConvert.cpp
+#define INVALID_VALUE -999.25
+----------------------------------------------------------------------------------------------------------------------------------
+// common_const_fileds_def.h
+#define INVALID_VALUE -999.25
+==================================================================================================================================
+// common_const_fileds_def.h
+const double INVALID_VALUE = -999.25;
+==================================================================================================================================
+// common_const_fileds_def.h
+extern double g_InvalidValue;
+// common_const_fileds_def.cpp
+double g_InvalidValue = -999.25;
+
+20、公共代码精简
+//转图片上resize的大小
+GstThlSliceInfo& thlSliceInfo = (GstThlSliceInfo&)pSectionModel->getSegyThlBmp()->getData();
+fminx = fminx / ( pSectionModel->getSegyThlBmp()->getThlEndValue() - pSectionModel->getSegyThlBmp()->getThlStartValue() ) *
+	pSectionModel->getSegyThlBmp()->getSegyBmp()->width();
+fminy = fminy / ( ( -thlSliceInfo.basicinfo().botdepth() ) - ( -thlSliceInfo.basicinfo().topdepth() ) ) *
+	pSectionModel->getSegyThlBmp()->getSegyBmp()->height();
+fmaxx = fmaxx/ ( pSectionModel->getSegyThlBmp()->getThlEndValue() - pSectionModel->getSegyThlBmp()->getThlStartValue() ) *
+	pSectionModel->getSegyThlBmp()->getSegyBmp()->width();
+fmaxy = fmaxy / ( ( -thlSliceInfo.basicinfo().botdepth() ) - ( -thlSliceInfo.basicinfo().topdepth() ) ) *
+	pSectionModel->getSegyThlBmp()->getSegyBmp()->height();
+----------------------------------------------------------------------------------------------------------------------------------
+inline float getThmBmpRange(GstSegyThlBmp* thlBmp) {
+    return thlBmp->getThlEndValue() - thlBmp->getThlStartValue();
+}
+
+auto& depthRange = thlSliceInfo.basicinfo().topdepth() - thlSliceInfo.basicinfo().botdepth();
+auto* thlBmp = pSectionModel->getSegyThlBmp();
+auto* segyBmp = thlBmp->getSegyBmp();
+
+fminx = fminx / getThmBmpRange(thlBmp) * segyBmp->width();
+fmaxx = fmaxx / getThmBmpRange(thlBmp) * segyBmp->width();
+fminy = fminy / depthRange * segyBmp->height();
+fmaxy = fmaxy / depthRange * segyBmp->height();
+==================================================================================================================================
+提取成独立方法
+
+21、临时对象使用
+SkBitmap* bmp = proc.createSegyBmpByWellTraj( getSegyWellData( data ), pParse, fPxlWidth, fPxlHeight, clrBar, clrInterpo );
+bmp->deepCopyTo( &segyBmp );
+delete bmp;
+----------------------------------------------------------------------------------------------------------------------------------
+proc.createSegyBmpByWellTraj( getSegyWellData( data ), pParse, fPxlWidth, fPxlHeight, clrBar, clrInterpo, &segyBmp );
+
+22、局部变量命名
+	cv::Mat g_dstImage;
+
+
+23、无用的转换
+saveObject( dynamic_cast<GSObject::Object*>( pTickLst->getNormalTopTick() ), stream );
+----------------------------------------------------------------------------------------------------------------------------------
+saveObject( pTickLst->getNormalTopTick(), stream );
+
+24、无效反序列化对象
+void GstSegyStream::loadSegyTickLst( GstSegyCoord* pCoordinate, TGSSerialize& stream )
+{
+	loadObject( pCoordinate->getSegyTickLst(), stream );
+	GstCoordinateTick* pLeftTick = new GstCoordinateTick();
+	loadObject( pLeftTick, stream );
+	GstSegyTick* pTopTick = new GstSegyTick();
+	loadObject( pTopTick, stream );
+	GstCoordinateTick* pNormalTopTick = new GstCoordinateTick();
+	loadObject( pNormalTopTick, stream );
+}
+
+25、代码精简
+bool SegyOp::isCreatedSegySection( GstSegyCoord* pSegyCoord )
+{
+	if( pSegyCoord->getSegyBmpObject()->getSegyBmp()->width() > 0 && pSegyCoord->getSegyBmpObject()->getSegyBmp()->height() > 0 && pSegyCoord->getbShow() )
+	{
+		return true;
+	}
+	return false;
+}
+----------------------------------------------------------------------------------------------------------------------------------
+bool SegyOp::isCreatedSegySection( GstSegyCoord* pSegyCoord )
+{
+	return pSegyCoord->getSegyBmpObject()->getSegyBmp()->width() > 0 &&
+	       pSegyCoord->getSegyBmpObject()->getSegyBmp()->height() > 0 && 
+	       pSegyCoord->getbShow();
+}

@@ -1,0 +1,52 @@
+
+
+sys和system用户的区别
+【system】用户只能用normal身份登陆em。
+【sys】用户具有“SYSDBA”或者“SYSOPER”权限，登陆em也只能用这两个身份，不能用normal。
+“SYSOPER”权限，即数据库操作员权限，权限包括：
+打开数据库服务器   关闭数据库服务器
+备份数据库       恢复数据库
+日志归档         会话限制
+“SYSDBA”权限，即数据库管理员权限，权限包括：
+打开数据库服务器   关闭数据库服务器
+备份数据库       恢复数据库
+日志归档       会话限制
+管理功能       创建数据库
+
+normal 、sysdba、 sysoper有什么区别
+normal 是普通用户 
+另外两个，你考察他们所具有的权限就知道了
+sysdba拥有最高的系统权限
+sysoper主要用来启动、关闭数据库，sysoper 登陆后用户是 public
+sysdba登陆后是 sys
+
+SQL> conn / as sysdba
+已连接。
+SQL> grant sysoper to test;
+
+授权成功。
+
+SQL> conn test/test as sysoper;
+已连接。
+SQL> show user
+USER 为"PUBLIC"
+SQL> conn test/test as sysdba
+已连接。
+SQL> show user
+USER 为"SYS"
+SQL>
+
+dba和sysdba的区别
+dba、sysdba这两个系统角色有什么区别呢 
+在说明这一点之前我需要说一下oracle服务的创建过程
+·创建实例
+·启动实例
+·创建数据库(system表空间是必须的)
+启动过程
+·实例启动
+·装载数据库
+·打开数据库
+
+sysdba，是管理oracle实例的，它的存在不依赖于整个数据库完全启动，
+只要实例启动了，他就已经存在，以sysdba身份登陆，装载数据库、打开数据库
+只有数据库打开了，或者说整个数据库完全启动后，dba角色才有了存在的基础！

@@ -1,0 +1,24 @@
+#include <boost/tokenizer.hpp>			需要添加  附加目录库
+boost库逐行读取文件数据进行解析
+函数原型	boost::tokenizer<boost::char_separator<char> > tok(strLine, boost::char_separator<char>(" \t,;"));
+
+		
+		
+bool ReadSplitLine(std::ifstream& ifs, std::vector<std::string>& vctStringRet)
+{
+	vctStringRet.clear();
+	std::string strLine("");
+	while (getline(ifs, strLine))
+	{
+		boost::tokenizer<boost::char_separator<char> > tok(strLine, boost::char_separator<char>(" "));
+		for (boost::tokenizer<boost::char_separator<char> >::iterator ite = tok.begin(); ite != tok.end(); ++ite)
+		{
+			vctStringRet.push_back(*ite);
+		}
+		if (!vctStringRet.empty())
+		{
+			return true;
+		}
+	}
+	return false;
+}

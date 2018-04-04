@@ -1,0 +1,65 @@
+首先：windows安装Python和pip，下载pip，解压，cmd命令行cd命令进入到解压后目录，运行python setup.py install,添加Python下的Scripts到系统环境变量中
+1.使用Python的DB-API时，只要搞清楚Connection和Cursor对象，打开后一定记得关闭，就可以放心地使用
+	SQLite是一种嵌入式数据库，它的数据库就是一个文件,特点是轻量级、可嵌入，不能承受高并发访问
+	MySQL是为服务器端设计的数据库，能承受高并发访问
+	SQL之ORM框架SQLAlchemy(object-relational mapping),把关系数据库的表结构映射到对象上
+
+2.web开发
+	HTML是一种用来定义网页的文本
+	HTTP是在网络上传输HTML的协议，用于浏览器和服务器的通信
+	HTTP请求的流程：
+		步骤1：浏览器向服务器发送HTTP请求，包括：方法(GET仅请求资源或者POST附带用户数据)；路径和域名；以及其他
+		步骤2：服务器向浏览器返回HTTP响应，包括：响应代码，响应类型(由Content-Type指定)，以及其他Header
+		步骤3：如果浏览器还要继续向服务器请求其他资源，就要再次发送HTTP请求，重复步骤1,2
+		一个HTTP请求只处理一个资源
+	HTML文档就是一系列的Tag组成，最外层的Tag是<html>
+	HTML定义页面的内容，CSS控制页面元素的样式，JavaScript负责页面交互逻辑
+	编写web业务需要一个统一的接口，就是WSGI:Web Server Gateway Interface。无论多么复杂的Web应用程序，入口都是一个WSGI处理函数，HTTP请求的所有输入信息都可以通过environ获得，HTTP响应的输出都可以通过start_response()加上函数返回值作为Body
+	常见的Python web框架有：
+		Django：全能型Web框架
+		Flask
+		web.py：小巧的Web框架
+		Bottle：类似Flask
+		Tornado：Facebook的开源异步web框架
+	模板
+		MVC(模型-视图-控制器) Model-View-Controller
+		{{ name }}叫做模版变量；{% if xx %} ，{% for x in list %}模版标签
+
+3.异步I/O
+	异步I/O模型需要一个消息循环，在消息循环中，主线程不断的重复‘读取消息-处理消息’的过程
+	协程：coroutine，也称微线程，一个线程执行，高效率
+	asyncio是标准库，内置了对异步IO的支持,可以实现单线程并发IO操作。如果把asyncio用在服务器端，例如Web服务器，由于HTTP连接就是IO操作，因此可以用单线程+coroutine实现多用户的高并发支持
+	asyncio实现了TCP、UDP、SSL等协议，aiohttp则是基于asyncio实现的HTTP框架
+	
+	
+4.基础
+	1.list:['','',''],list是一种有序的集合，可以随时增删改查
+	2.tuple:('','',''),tuple一旦初始化不能修改
+	3.dict:d = {'Michael': 95, 'Bob': 75, 'Tracy': 85},使用键-值存储
+	4.set:s = set([1, 2, 3]),set是一组key的集合，不存储value
+	5.字符串str是不可变对象，常用来作为key
+	6.自然字符串，通过在字符串前加r或R
+	7.python允许处理unicode字符串，加前缀u或U
+	8.Python中的字符串有两种索引方式，第一种是从左往右，从0开始依次增加；第二种是从右往左，从-1开始依次减少
+	9.切片截取的范围是前闭后开
+	10.可以直接作用于for循环的数据类型有以下几种：
+		一类是集合数据类型，如list、tuple、dict、set、str等；
+		一类是generator，包括生成器和带yield的generator function。
+		这些可以直接作用于for循环的对象统称为可迭代对象：Iterable
+	11.map()函数接收两个参数，一个是函数，一个是序列，map将传入的函数依次作用到序列的每个元素，并把结果作为新的list返回
+	12.reduce()必须接收两个参数，把一个函数作用在一个序列[x1, x2, x3...]上，reduce把结果继续和序列的下一个元素做累积计算
+	13.在代码运行期间动态增加功能的方式，称之为“装饰器”(Decorator)
+	14.闭包：如果在一个内部函数里，对在外部作用域（但不是在全局作用域）的变量进行引用，那么内部函数就被认为是闭包(closure),装饰器就是一种闭包，区别在于,装饰器的参数是一个函数或类,专门对类或函数进行加工处理
+		闭包中不能修改外部作用域的局部变量
+	15.异常处理
+		1.try不仅捕获异常，而且处理异常之后会恢复执行
+		2.如果finally中没有return，那么返回try或者except中return的值
+		3.在循环中会执行完finally之后再跳到下一个循环
+		4.无论try是否发生异常，finally总会执行，只有在try没有异常时才执行else
+		5.利用raise传递异常
+		6.在 Python 3 中，异常的对象在 except 代码块之外是不可见的
+	
+5.常见误区
+	1.函数参数的默认值只会评估使用一次—在函数定义的时候
+	2.给作用域中的一个变量赋值时，Python 会自动的把它当做是当前作用域的局部变量，从而会隐藏外部作用域中的同名变量
+	3.当迭代的时候，从一个列表(list)或者数组中删除元素会报错

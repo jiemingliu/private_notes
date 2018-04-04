@@ -1,0 +1,307 @@
+1、局部变量的命名
+	const std::vector<BrkPointInfo>& m_vecBrk = infos;
+	
+2、特定状态的判断及枚举定义
+float ProfileWell::actualToScreenY_brk(const std::vector<BrkPointInfo>& infos, float actualY)
+{
+	int ntype = getDepthType();
+	WellInfo* wellData =  dynamic_cast<WellInfo*>(m_pData);
+
+	bool bReverse = false;
+	if (ntype ==2 || ntype == 3 || ntype == 4)
+	{
+		bReverse = true;
+	}
+
+	rectifyDepth(infos, wellData->top(), wellData->bot(), actualY,bReverse );
+	float ftop = wellData->top();
+	rectifyDepth(infos, wellData->top(), wellData->bot(), ftop, bReverse);
+
+	//assert(actualY >= wellData->top());
+	
+	if (bReverse)
+	{
+		return getOrigination().fY + getHeadHeight() + getScreenDistanceY(ftop -actualY);
+	}
+
+	return getOrigination().fY + getHeadHeight() + getScreenDistanceY(actualY - ftop);
+}
+----------------------------------------------------------------------------------------------------------------------------------
+enum DepthType
+{
+    Type1 = 0,
+    Type2 = 1,
+    Type3 = 2,
+    Type4 = 3,
+};
+
+inline bool isXXXDepthType(type) {
+    return (Type2 == type) || (Type3 == type) || (Type4 == type);
+}
+
+bool bReverse = isXXXDepth(getDepthType());
+==================================================================================================================================
+inline bool isYYYDepthType(type) {
+    return Type1 == type;
+}
+
+bool bReverse = !isYYYDepth(getDepthType());
+
+3、map容器的使用及排序
+class GSLIARARY_API DepthValBackup
+{
+public:
+	DepthValBackup();
+	virtual ~DepthValBackup();
+
+public:
+
+	typedef float ValueType;
+	typedef std::map<ValueType, ValueType> ValueBackups;//<源深度，目的深度>
+	typedef std::map<ValueType, ValueType>::iterator ValIterator;
+	//0 :测量 1： 垂直 2： 海拔
+public:
+	void addValue(int nSrcType, int nDstType, float srcVal, float dstVal);
+	
+	bool findVal(int nSrcType, int nDstType, float srcVal, float& dstVal);
+
+protected:
+	ValueBackups m_md2Tvd;
+	ValueBackups m_md2Tvdss;
+	ValueBackups m_md2Owt;
+	ValueBackups m_md2Twt;
+	ValueBackups m_md2Tvt;
+	ValueBackups m_md2Tst;
+};
+void DepthValBackup::addValue( int nSrcType, int nDstType, float srcVal, float dstVal )
+{
+	if (nSrcType !=0)
+	{
+		return; //暂未处理...
+	}
+	if (nDstType == 1/**********************************************************************************************/)
+	{
+		m_md2Tvd.insert(std::make_pair(srcVal, dstVal));
+	}
+	else if (nDstType == 2)
+	{
+		m_md2Tvdss.insert(std::make_pair(srcVal, dstVal));
+	}
+	else if (nDstType == 3)
+	{
+		m_md2Owt.insert(std::make_pair(srcVal,dstVal));
+	}
+	else if (nDstType == 4)
+	{
+		m_md2Twt.insert(std::make_pair(srcVal,dstVal));
+	}
+	else if (nDstType == 5)
+	{
+		m_md2Tvt.insert(std::make_pair(srcVal,dstVal));
+	}
+	else if (nDstType == 6)
+	{
+		m_md2Tst.insert(std::make_pair(srcVal,dstVal));
+	}
+}
+
+bool DepthValBackup::findVal( int nSrcType, int nDstType, float srcVal, float& dstVal )
+{
+	if (nSrcType !=0)
+	{
+		return false; //暂未处理...
+	}
+	if (nDstType == 1)
+	{
+		ValIterator it = m_md2Tvd.find(srcVal);
+		if (it != m_md2Tvd.end() )
+		{
+			dstVal = it->second;
+			return true;
+		}
+	}
+	else if (nDstType == 2)
+	{
+		ValIterator it = m_md2Tvdss.find(srcVal);
+		if (it != m_md2Tvdss.end() )
+		{
+			dstVal = it->second;
+			return true;
+		}
+	}
+	else if (nSrcType == 3)
+	{
+		ValIterator it = m_md2Owt.find(srcVal);
+		if (it != m_md2Owt.end())
+		{
+			dstVal = it->second;
+			return true;
+		}
+	}
+	else if (nSrcType == 4)
+	{
+		ValIterator it = m_md2Twt.find(srcVal);
+		if (it != m_md2Twt.end())
+		{
+			dstVal = it->second;
+            return true;
+		}
+	}
+	else if (nSrcType == 5)
+	{
+		ValIterator it = m_md2Tvt.find(srcVal);
+		if (it != m_md2Tvt.end())
+		{
+			dstVal = it->second;
+			return true;
+		}
+	}
+	else if (nSrcType == 6)
+	{
+		ValIterator it = m_md2Tst.find(srcVal);
+		if (it != m_md2Tst.end())
+		{
+			dstVal = it->second;
+			return true;
+		}
+	}
+	return false;
+}
+----------------------------------------------------------------------------------------------------------------------------------
+class GSLIARARY_API DepthValBackup
+{
+public:
+	DepthValBackup();
+	virtual ~DepthValBackup();
+
+public:
+
+	typedef float ValueType;
+	/// <summary>
+    /// 源深度，目的深度
+    /// </summary>
+	typedef std::pair<ValueType, ValueType> ValuePair;
+	typedef std::vector<ValuePair> ValueBackups;
+public:
+    enum DepthType
+    {
+        MD      = 0x0001,       // 测量
+        TVD     = 0x0002,       // 垂直
+        TVDSS   = 0x0004        // 海拔
+        TWT     = 0x0008,       // TWT
+        TST     = 0x0010,       // TST
+        OWT     = 0x0020,       // OWT
+    };
+    
+	void addValue(int nSrcType, int nDstType, float srcVal, float dstVal) {
+	    addValue((nSrcType + nDstType), srcVal, dstVal);
+	}
+	
+	bool findVal(int nSrcType, int nDstType, float srcVal, float& dstVal) {
+	    return findDepthValue(getTypeConvertDatas(nSrcType + nDstType), srcVal, dstVal);
+	}
+
+protected:
+    ValueBackups& getTypeConvertDatas(int type) {
+        return m_typeDatas[type];
+    }
+    
+    void addValue(int type, float srcValue, float dstVal) {
+        getTypeConvertDatas(type)[srcValue] = dstValue;
+    }
+    
+private:
+    
+    typedef std::map<int, ValueBackups> TypeDataCollection;    
+    TypeDataCollection m_typeDatas;
+};
+
+template<typename _EleType, typename _ConditionType>
+class data_find
+    : public std::binary_function<_EleType, _ConditionType, bool>
+{
+public:
+    bool operator()(const _EleType& ele, const _ConditionType& value) const
+    {
+        return ele.first == value;
+    }
+};
+typedef data_find<PairValue, float> FindPairFloatValue;
+
+#include <functional>
+inline bool findDepthValue (const ValueBackups& datas, float srcValue, float& dstVal)
+{
+    auto iter = std::find_if(datas.begin(), datas.end(), std::bind2nd(FindPairFloatValue(), srcValue));
+    if (iter != datas.end())
+    {
+        dstVal = iter->second;
+        return true;
+    }
+    
+    return false;
+}
+
+4、变量构造
+Wm5::Vector2d orgPt = Wm5::Vector2d( basicInfo.originpt().deasting(), basicInfo.originpt().dnorthing() ); 
+----------------------------------------------------------------------------------------------------------------------------------
+Wm5::Vector2d orgPt（basicInfo.originpt().deasting(), basicInfo.originpt().dnorthing()); 
+
+5、冗长重复的数据调用、无用的proto调用CopyFrom
+bool SegyOp::extendThlSection( GstSegyCoord* pSegyCoord,const google::protobuf::Message& msg )
+{
+	SegyExtendData data;
+	data.CopyFrom( msg );
+	//
+	SegyCoordData& coordData = ( SegyCoordData& )pSegyCoord->getData();
+	if( coordData.sliceparam().slicetype() != SegyDataProc::SliceType::sliceTypeInf::incl )
+	{
+		return false;
+	}
+	//
+	WellSliceParam& sliceParam = (WellSliceParam&)pSegyCoord->getSegyBmpObject()->getData();
+	sliceParam.mutable_extenddata()->CopyFrom( data );
+ 	pSegyCoord->getSegyBmpObject()->getSegyBmpOp()->setBmpDrawRect( SkRect::MakeLTRB( 
+ 		pSegyCoord->getSegyBmpObject()->getPreExtendRect().left() -
+ 		sliceParam.extenddata().fstartextendlen() / pSegyCoord->getSegyBmpObject()->getxyScale() * 1000,
+ 		pSegyCoord->getSegyBmpObject()->getPreExtendRect().top(),
+ 		pSegyCoord->getSegyBmpObject()->getPreExtendRect().right() + 
+ 		sliceParam.extenddata().fendextendlen() / pSegyCoord->getSegyBmpObject()->getxyScale() * 1000,
+ 		pSegyCoord->getSegyBmpObject()->getPreExtendRect().bottom()) );
+	//
+	GstSegyRangeOp::resetSegyBmpByWellData( pSegyCoord );
+	//
+	pSegyCoord->getSegyBmpObject()->initSegyMatrix();
+	updateCoordinateTick(pSegyCoord);
+	pSegyCoord->updateAllSubs();
+	return true;
+}
+----------------------------------------------------------------------------------------------------------------------------------
+bool SegyOp::extendThlSection( GstSegyCoord* pSegyCoord,const google::protobuf::Message& msg )
+{
+	SegyCoordData& coordData = ( SegyCoordData& )pSegyCoord->getData();
+	if( coordData.sliceparam().slicetype() != SegyDataProc::SliceType::sliceTypeInf::incl )
+	{
+		return false;
+	}
+	
+    auto* bmpObj = pSegyCoord->getSegyBmpObject();
+    auto& extRc = bmpObj->getPreExtendRect();
+
+	WellSliceParam& sliceParam = (WellSliceParam&)bmpObj->getData();
+	auto* extData = sliceParam.mutable_extenddata();
+    extData->CopyFrom(msg);
+ 	bmpObj->getSegyBmpOp()->setBmpDrawRect( SkRect::MakeLTRB( 
+ 		extRc.left() - extData->fstartextendlen() / bmpObj->getxyScale() * 1000,
+ 		extRc.top(),
+ 		extRc.right() + extData->fendextendlen() / bmpObj->getxyScale() * 1000,
+ 		extRc.bottom()) );
+
+	GstSegyRangeOp::resetSegyBmpByWellData( pSegyCoord );
+
+	bmpObj->initSegyMatrix();
+	updateCoordinateTick(pSegyCoord);
+	pSegyCoord->updateAllSubs();
+	return true;
+}
+
+6、
