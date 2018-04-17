@@ -1,0 +1,97 @@
+//使用此种方法转换std::string，将中文字符转换成可见字符串
+inline std::string ConvertWideCharToUTF8(const std::string& strResourse)
+{
+	std::string strUTF8;
+	int nLenWideCharStr = MultiByteToWideChar(CP_ACP, 0, strResourse.c_str(), -1, NULL, 0);
+	PWCHAR pWideCharStr = NULL;
+	pWideCharStr =(PWSTR)HeapAlloc(GetProcessHeap(), 0, nLenWideCharStr*sizeof(wchar_t));
+	memset(pWideCharStr,0,nLenWideCharStr*sizeof(wchar_t));
+	MultiByteToWideChar(CP_ACP, 0, strResourse.c_str(), -1, pWideCharStr, nLenWideCharStr);
+
+	std::wstring wideStr = pWideCharStr;
+	int nLenUTF8 = WideCharToMultiByte(CP_UTF8, 0, &wideStr[0], wideStr.size(), 0,0,0,0);
+	strUTF8.resize(nLenUTF8);
+	WideCharToMultiByte(CP_UTF8, 0, &wideStr[0], wideStr.size(), &strUTF8[0], nLenUTF8, 0, 0);
+	return strUTF8;
+}
+
+//使用此种方法转换System::String成std::string,不会出现中文乱码问题
+inline void ConvertToStdString(System::String^ str,std::string& destStr)
+{
+	char* p = (char*)(int)System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi(str);
+	destStr = p;
+	System::Runtime::InteropServices::Marshal::FreeHGlobal((System::IntPtr)p);
+}
+
+inline int WCharToChar(UINT PageCode, std::wstring strWChar, std::string &strChar)
+{
+	strChar.clear();
+	int ret = 0;
+	int nSize = (int)strWChar.length()*2;
+	static char pszDest[1024*10];
+	if( pszDest )
+	{
+		memset( pszDest, 0, nSize+1 );
+		ret = WideCharToMultiByte(PageCode,NULL,strWChar.c_str(),-1,pszDest,nSize,NULL,FALSE);
+		pszDest[nSize] = '\0';
+		strChar = pszDest;
+	}
+	return ret;
+}
+
+inline int CharToWChar(UINT PageCode, std::string strChar, std::wstring &strWChar)
+{
+	strWChar.clear();
+	int ret = 0;
+	//wchar_t *pszDest = new wchar_t[strChar.length()+1];
+	static wchar_t pszDest[1024*10];
+	if( pszDest )
+	{
+		memset( pszDest, 0, (strChar.length()+1)*sizeof(wchar_t) );
+		ret = MultiByteToWideChar(PageCode, 0, strChar.c_str(), -1, pszDest, (int)strChar.length());
+		pszDest[strChar.length()] = L'\0';
+		strWChar = pszDest;
+	}
+	return ret;
+} 
+
+//Converting a WChar string to a Ansi string
+std::string WChar2Ansi(LPCWSTR pwszSrc)
+{
+	int nLen = WideCharToMultiByte(CP_ACP, 0, pwszSrc, -1, NULL, 0, NULL, NULL);
+	if (nLen<= 0) return std::string("");
+	char* pszDst = new char[nLen];
+	if (NULL == pszDst) return std::string("");
+	WideCharToMultiByte(CP_ACP, 0, pwszSrc, -1, pszDst, nLen, NULL, NULL);
+	pszDst[nLen -1] = 0;
+	std::string strTemp(pszDst);
+	delete [] pszDst;
+	return strTemp;
+}
+
+string wstringConvertstring(wstring& inputws)
+{
+	return WChar2Ansi(inputws.c_str());
+}
+
+//Converting a Ansi string to WChar string
+std::wstring Ansi2WChar(LPCSTR pszSrc, int nLen)
+{
+	int nSize = MultiByteToWideChar(CP_ACP, 0, (LPCSTR)pszSrc, nLen, 0, 0);
+	if(nSize <= 0) return NULL;
+	WCHAR *pwszDst = new WCHAR[nSize+1];
+	if( NULL == pwszDst) return NULL;
+	MultiByteToWideChar(CP_ACP, 0,(LPCSTR)pszSrc, nLen, pwszDst, nSize);
+	pwszDst[nSize] = 0;
+	if( pwszDst[0] == 0xFEFF) // skip Oxfeff
+		for(int i = 0; i < nSize; i ++) 
+			pwszDst[i] = pwszDst[i+1]; 
+	wstring wcharString(pwszDst);
+	delete pwszDst;
+	return wcharString;
+}
+
+std::wstring stringConvertwstring(const string& s)
+{
+	return Ansi2WChar(s.c_str(),s.size());
+}

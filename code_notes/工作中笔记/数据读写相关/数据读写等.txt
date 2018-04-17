@@ -1,0 +1,13 @@
+FILE* pFile = fopen(outputFilepath.GetBuffer(0), "w");
+
+char aLine[250];
+
+strcpy(aLine, src);
+fputs(aLine, pFile);	
+strcpy(aLine, "\r\n");
+fputs(aLine, pFile);
+
+
+
+sprintf(aLine, " np=           0 time=   %d", 30); 
+::OutputDebugString(str);
