@@ -1,0 +1,105 @@
+/*标签选择器*/
+body{
+	font-family:"Microsoft Yahei";
+	font-size:30px;
+}
+
+/*类选择器*/
+.class1{
+	font-family:"Microsoft Yahei";
+	font-size:20px;
+}
+
+/*ID选择器*/
+#id1{
+	font-family:"Microsoft Yahei";
+	font-size:40px;
+	color:blue;
+}
+
+/*子选择器,仅限于第一代子元素*/
+#id2>span{
+	border:1px solid red;
+}
+
+/*包含(后代)选择器，作用于所有子元素，包括嵌套子元素*/
+.class3 span{
+	color:blue;
+}
+
+/*通用选择器，作用于所有标签元素*/
+/* *{
+	color:red;
+} */
+
+/*伪类选择符，给标签的某种状态设置样式*/
+a:hover{
+	color:red;
+	font-size:50px;
+}
+
+/*分组选择符*/
+h5,h6{
+	color:red;
+}
+
+/*权值：标签为１，类选择器为１０，ＩＤ选择器为１００，继承为０．１*/
+/*   !important    权值高于一切*/
+h6{
+	color:red!important;
+}
+
+/*文字排版
+粗体 font-weight:bold;
+斜体 font-style:italic;
+下划线 text-decoration:underline;
+删除线 text-decoration:line-through;
+
+段落排版
+缩进 text-indent:2em;
+行高 line-height:1.5em;
+字母间距 letter-spacing:30px;
+单词间距 word-spacing:40px;
+对齐方式 text-align:center;  居中
+			  text-align:left;	    居左
+			  text-align:right;	    居右
+*/
+
+/*颜色的几种方式
+color:red;
+color:rgb(233,120,233);
+color:rgb(20%,30%,40%);
+color:#00ffff;
+*/
+
+/*长度单位值
+像素px
+em,例如font-size:12px; 则1em=12px,2em=24px;
+%,例如font-size:12px;line-height:110%;则line-height为(12*110%)px
+*/
+
+/*盒模型
+边框 border:2px solid red;  (线宽border-width，样式border-style(虚线dashed,点线dotted,实线solid)，颜色border-color)
+		上边框 border-top 下边框 border-bottom 坐边框 border-left 右边框 border-right
+外边界 margin:20px 10px 10px 20px;(上右下左)，也可以分别设置 margin-bottom,margin-left等等
+内填充 padding:20px 用法同margin
+*/
+
+/*布局模型
+1.Flow流动模型，默认
+2.Float浮动模型
+div{
+	float:left;
+}
+3.Layer层模型
+三种位置设置：进行定位的方式一样，top:20px;      right,bottom,left同top
+	1，绝对定位，position:absolute，相对于最近的一个具有定位属性的父包含块进行定位
+	2，相对定位，position:relative，相对于在默认情况下原本的位置进行定位，原来的位置依然存在
+	3，固定定位，position:fixed; 相对于网页窗口进行定位，不会随滚动条滚动
+*/
+
+/*使用小技巧
+1,设置行内元素居中，设置父级块元素 text-align:center;
+2,设置定宽块元素居中，设置该块元素的左右margin为auto，即width:400px;margin-left:auto;margin-right:auto;
+3,设置不定宽块元素居中，三种方法，和垂直居中，看慕课
+*/

@@ -1,0 +1,83 @@
+<html>
+<head>
+	<title>Html语义化</title>
+	<style>
+		span{color:red}
+		table tr td,th{border:1px solid#000}
+		a{color:red}
+	</style>
+</head>
+<body>
+	<p>html<strong>语义化，这里是表现强调</strong>，<span>这里是为了表现不一样</span>，或者这样 <em>这里也是表现强调</em> 这两种表现强调</p>
+	<p>周瑜，不可否认，他是历史上一个了不起的英雄人物，确实也配的上一句<q>聪明秀出为之英，胆略过人为之雄</q></p>
+	<blockquote>	这是一段很长的引用，引用自别人的作品，这是一段很长的引用，引用自别人的作品，这是一段很长的引用，引用自别人的作品，这是一段很长的引用，引用自别人的作品，这是一段很长的引用，引用自别人的作品，这是一段很长的引用，引用自别人的作品，这是一段很长的引用，引用自别人的作品<span>为什么不用 q 标签表示引用呢，因为这种用法，是有缩进的，注意看前后缩进</span>
+	</blockquote>
+	<p>为了在一段文字中加入空格，&nbsp;&nbsp;&nbsp;&nbsp;需要手动加上一些特殊字符，想知道怎么写去看源码,接下来是演示 hr/ 标签的作用，水平横线 </p>
+	<hr/>
+	<address>一般用于各种地址，邮箱地址，住址，工作地址等等</address>
+	<p>加入<code>var a = 3;</code>	一行代码</p>
+	<p>加入多行代码
+		<pre>
+			eventUntil.addEventHandler(btn2,"click",showBtnMessage);
+			eventUntil.addEventHandler(box,"click",showBoxMessage);
+			eventUntil.addEventHandler(muke,"click",stopGoto);
+		</pre>
+	</p>
+	<div id="divColumnTable">
+		<ul>
+			<li>无序列表1</li>
+			<li>无序列表2</li>
+			<li>无序列表3</li>
+		</ul>
+		<ol>
+			<li>有序列表1</li>
+			<li>有序列表2</li>
+			<li>有序列表3</li>
+		</ol>
+	</div>
+	<div id="divTable">
+		<table summary="这是表格摘要，不会显示">
+			<caption>这是表格标题</caption>
+			<tr>
+				<th>列名1</th>
+				<th>列名2</th>
+				<th>列名3</th>
+			</tr>
+			<tr>
+				<td>单元格1</td>
+				<td>单元格2</td>
+				<td>单元格3</td>
+			</tr>
+			<tr>
+				<td>单元格4</td>
+				<td>单元格5</td>
+				<td>单元格6</td>
+			</tr>
+		</table>
+	</div>
+	<a href="http://www.imooc.com" title="鼠标划过显示这个">这个链接在本窗口打开</a>
+	<a href="http://www.imooc.com" target="_blank">这个窗口在新标签页打开</a>
+	<img src="src/google.gif" title="鼠标划过显示" alt="src不存在的时候显示这个" />
+	<div>
+		<label for="radio1">此标签关联单选选项1</lable>
+		<form id="form1">
+			<input type="text" name="单行文本text" value = "单行文本text"" />
+			<input type="password" name="单行文本password" value="password" />
+			<textarea rows="5" cols="50">多行文本域</textarea>
+			<input type="radio" name="单选选项name必须一样" id="radio1"/>单选选项1
+			<input type="radio" name="单选选项name必须一样" />单选选项2
+			<input type="radio" name="单选选项name必须一样" checked="checked"/>单选选项3
+			<input type="checkbox" name="复选选项1" /> 复选选项1
+			<input type="checkbox" name="复选选项2"  checked = "checked"/> 复选选项2
+			<input type="checkbox" name="复选选项3" /> 复选选项3
+			<select multiple="multiple">
+				<option value="commitValue1">下拉选项1</option>
+				<option value="commitValue2">下拉选项2</option>
+				<option value="commitValue3">下拉选项3</option>
+			</select>
+			<br/>
+			<input type="submit" value="commit" />
+		</form>
+	</div>
+</body>
+</html>
