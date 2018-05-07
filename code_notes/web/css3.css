@@ -1,0 +1,22 @@
+border-radius:应用于任何元素的圆角边框
+box-shadow:向盒子添加阴影
+border-image:给边框添加背景图片
+color:rgba():颜色属性新增透明度通道
+linear-gradient:渐变色
+嵌入字体@font-face {
+    font-family: "MOOC Font";
+    src: url("http://www.imooc.com/Amaranth-BoldItalic.otf");
+}
+text-shadow:文本阴影
+background-origin:设置背景颜色或属性时从margin,还是padding,还是文本区开始,要设置这个属性必须设置 no-repeat
+background-clip:背景图片裁剪
+background-size:背景图片的大小
+background:组合以上不同的属性
+
+属性选择器:E[propertyName^="value"] 匹配元素名为E，属性名为propertyName,值以"value"开头的任何字符串
+E[propertyName$="value"] 匹配元素名为E，属性名为propertyName,值以"value"结尾的任何字符串
+E[propertyName*="value"] 匹配元素名为E，属性名为propertyName,值包含"value"的任何字符串
+
+“:root”选择器等同于<html>元素，简单点说：
+:root{background:orange}
+html {background:orange;}
