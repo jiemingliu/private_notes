@@ -1,3 +1,4 @@
+第一部分：新增基础样式
 border-radius:应用于任何元素的圆角边框
 box-shadow:向盒子添加阴影
 border-image:给边框添加背景图片
@@ -11,12 +12,145 @@ text-shadow:文本阴影
 background-origin:设置背景颜色或属性时从margin,还是padding,还是文本区开始,要设置这个属性必须设置 no-repeat
 background-clip:背景图片裁剪
 background-size:背景图片的大小
-background:组合以上不同的属性
+多重背景    background ： [background-color] | [background-image] | 
+				[background-position][/background-size] | [background-repeat] |
+				 [background-origin],...
 
+第二部分：选择器
 属性选择器:E[propertyName^="value"] 匹配元素名为E，属性名为propertyName,值以"value"开头的任何字符串
 E[propertyName$="value"] 匹配元素名为E，属性名为propertyName,值以"value"结尾的任何字符串
 E[propertyName*="value"] 匹配元素名为E，属性名为propertyName,值包含"value"的任何字符串
 
-“:root”选择器等同于<html>元素，简单点说：
-:root{background:orange}
-html {background:orange;}
+:root 根选择器等同于<html>元素
+例如 :root{background:orange;}  等同于 html {background:orange;}
+
+:not 否定选择器，表示把什么排除在外
+例如 
+input:not([type="button"]):not([id="id1"]){
+	background:red;
+}
+的意思是所有除了类型为button和id为id1的input标签背景都设置为红色
+
+:empty 表示空
+例如
+div:empty{display: none;} 
+表示空div不显示
+
+#IDName:target 目标选择器
+例如
+#brand:target {
+  background: orange;
+  color: #fff;
+}
+<h2><a href="#brand">Brand</a></h2>
+<div class="menuSection" id="brand">
+    content for Brand
+</div>
+
+:first-child 选择父元素的第一个子元素
+例如
+ol > li:first-child{
+  color: red;
+}
+
+:last-child 选择父元素的最后一个子元素
+
+:nth-child(n) 选择器用来定位某个父元素的一个或多个特定的子元素。其中“n”是其参数，而且可以是整数值(1,2,3,4)，也可以是表达式(2n+
+:1、-n+5)和关键词(odd、even)
+
+:nth-last-child(n) 选择器和上面的“:nth-child(n)”选择器非常的相似，只是这里多了一个“last”，表示从某父元素的最后一个子元素开始计算，
+来选择特定的元素
+
+:nth-of-type(n) 意义同上类似，只是这里是加了类型匹配的
+例如
+.wrapper > p:nth-of-type(2n){
+  background: orange;
+}
+表示类名是wrapper下的偶数个 p 标签背景设为橙色
+
+:nth-last-of-type(n) 意义同上，从后往前数
+
+:first-of-type 和 :last-of-type 选择器功能是一样的，选择父元素下的某个类型的第一个子元素和最后一个子元素
+例如
+.class1 > p:first-of-type{background: red;}
+表示将 class为class1的父元素的第一个p背景设为红色
+
+:only-child 选中有且只有一个子元素
+
+:only-of-type 同类型的子元素只有一个
+
+:enable 和 :disables 用于选择那些设置了 enable 或者 disabled 的元素，元素默认是enable的
+
+:checked 用于选择那些选中状态的元素
+
+::selection 用来匹配突出显示的文本(用鼠标选择文本时的文本)
+
+:read-only 用来指定处于只读状态元素的样式。简单点理解就是，元素中设置了 readonly=’readonly’
+
+:read-write 选择器刚好与“:read-only”选择器相反，主要用来指定当元素处于非只读状态时的样式
+
+第三部分：动画相关
+为了保证各浏览器都能使用，各个平台的使用方法都加上，例如这样
+.wrapper span {
+  display:block;
+ -webkit-transform: rotate(20deg);
+ -moz-transform: rotate(20deg);
+  transform:rotate(20deg);
+}
+
+:rotate();	旋转函数
+:skew(); :skewX(); :skewY();	倾斜函数
+:scale() :scaleX(); :scaleY();	缩放函数
+:translate(); :translateX(); :translateY(); 	移动函数
+transform-origin:    修改座标原点的位置
+-webkit-transition: all .5s ease-in 2s;    设置动态过渡属性
+transition: [作用的元素，all代表所有][transition-duration指定完成过渡所需的时间][transition-timing-function指定过渡函数][transition-delay指定动画延迟多长时间开始]
+过渡函数有：ease,ease-in,ease-in-out,ease-out,linear和cubic-bezier
+
+@keyframes 关键帧定义，使用animation-name:或者animation:使用关键帧定义的动画
+例如
+@keyframes wobble {
+  0% {
+    margin-left: 100px;
+    background:green;
+  }
+  40% {
+    margin-left:150px;
+    background:orange;
+  }
+  100% {
+    margin-left: 100px;
+    background: red;
+  }
+}
+div {
+  width: 100px;
+  height: 100px;
+  background:red;
+  color: #fff;
+}
+div:hover{
+  animation: wobble 5s ease-in-out .1s;
+}
+等同于以下用法
+div:hover {
+  animation-name: wobble;
+  animation-duration: 5s;
+  animation-timing-function: ease-in-out;
+  animation-delay: .1s;
+  animation-iteration-count:infinite;  /*无限次播放动画*/
+}
+
+第四部分：布局
+columns:<column-width>||<column-count>	多列布局
+column-width: 列宽
+column-count: 列数
+column-gap: 列间距
+column-rule:<column-rule-width>|<column-rule-style>|<column-rule-color> 定义列与列之间的边框宽度、边框样式和边框颜色
+column-span:all 跨所有列显示
+box-sizing:content-box|border-box|inherit 两种不同的盒模型的尺寸算法，默认是content-box表示宽高是content的宽高，border-box表示宽高是包含padding和border的宽高
+flex 伸缩布局
+
+第五部分：部分新特性
+resize: 允许用户通过拖动的方式来修改元素的尺寸来改变元素的大小
+outline: 轮廓线
