@@ -1,6 +1,0 @@
-修改Dictionary的键
-var dict =new Dictionary<string,string>();
-    dict.Add("abc","1");    
-    dict.Add("abcd","2");   
-    dict.Add("abcf","3");
-dict = dict.ToDictionary(k => k.Key == "abc" ? "abce" : k.Key, k => k.Value);

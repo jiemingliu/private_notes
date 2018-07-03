@@ -1,0 +1,32 @@
+1，c#调用c#dll的方法
+先添加引用dll，之后直接使用引用dll中的类
+2，c#调用非托管c++dll的方法(需要注意解决方案平台必须一致)
+第一步，新建两个项目，一个c#应用程序，一个c++dll，在c++项目中声明导出的函数，形如
+extern "C" __declspec(dllexport) function();
+可以用以下方式简化声明
+#ifdef EXPORTAPI
+#define EXPORTAPI extern "C" __declspec(dllimport)
+#else
+#define EXPORTAPI extern "C" __declspec(dllexport)
+#endif
+
+EXPORTAPI void function();
+
+第二步，在C#项目中调用该函数，方法是先声明该函数，形如下：
+[DllImport("MyDLL.dll", CharSet =CharSet.Ansi)] //引入dll，并设置字符集
+//[DllImport("MyDLL.dll")] //可以替代上一句代码
+public static extern void function();
+然后就可以直接调用该导入的方法
+3，c#调用托管c++dll的方法
+第一步，新建两个项目，一个c#应用程序，一个c++dll，并设置c++项目为公共语言运行时支持(clr)
+第二步，在c++项目中声明托管类，并定义好函数等，形如下：
+public ref class clrClass
+{
+public:
+	clrClass(void);
+	~clrClass(void);
+	void function();//可由c#项目调用
+};
+第三步，在c#项目中引用该托管dll，并调用该托管类和方法(需要using所在命名空间)，方法如下：
+clrClass ClrCLass =new clrClass();
+ClrCLass.function();
