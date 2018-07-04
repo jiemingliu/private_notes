@@ -17,8 +17,6 @@ pip install --download c:\python35\packages -r requirements.txt
 第三步：拷贝packages文件夹和requirements.txt,packages文件夹放在C:\python36下，requirements.txt放在C:\Python35\Scripts下  
 然后执行 pip install --no-index --find-links=C:\Python35\packages -r requirements.txt (python27中--find-links改为--find-index)
 
-
-
 # 使用virtualenv配置不同版本的python的方法
 1，前提，virtualenv存在，配置的python的版本已经安装
 2，进入需要配置的目录，执行命令 virtualenv -p c:\Python36\python.exe {虚拟环境目录名}

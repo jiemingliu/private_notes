@@ -18,6 +18,7 @@
 3，输入法，RIME，http://rime.im/
 4，未验证的全文检索工具，谷歌桌面、FileLocator、DocFetcher
 5，前端er：vs code，webstrom
+6, 代码搜索神器：the silver searcher
 
 
 系统工具
