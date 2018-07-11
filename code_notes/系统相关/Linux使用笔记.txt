@@ -1,7 +1,7 @@
 1.开源开源开源的多用户系统，以及多用户组，利于不同权限管理，可通过命令行进行管理
 2.服务器使用LAMP（Linux + Apache + MySQL + PHP）或LNMP（Linux + Nginx+ MySQL + PHP）
 3.系统启动过程：内核引导->运行init->系统初始化->建立终端->用户登录系统
-4.目录结构是树结构(倒立的树)，顶级目录是根目录/
+4.系统中一切皆文件，目录结构是树结构(倒立的树)，顶级目录是根目录/,目录名称严格区分大小写
 5.远程登录功能通过ssh服务实现，默认ssh服务端口号22
 yum install ssh  #安装ssh
 service sshd start  #启动ssh
@@ -9,4 +9,9 @@ ssh -p 8080 serverName@127.0.0.1  #8080是端口，serverName是服务器用户�
 6.yum（ Yellow dog Updater, Modified）是一个在Fedora和RedHat以及SUSE中的Shell前端软件包管理器
 7.Shell 是一个用 C 语言编写的程序，它是用户使用 Linux 的桥梁。Shell 既是一种命令语言，又是一种程序设计语言，shell这个应用程序提供了一个界面，用户通过这个界面访问操作系统内核的服务
 shell程序文件后缀名为.sh 文件第一行一般使用 #!/bin/bash 来指定解释器
-8.
+shell脚本是将各种命令通过逻辑语句组合形成的程序
+8.管道命令符"|"，将前一个命令的标准输出当作后一个命令的标准输入
+9.io重定向，配置网卡信息、yum仓库等
+10.quota服务管理磁盘容量配额，为每个用户限制硬盘使用空间
+11.防火墙管理工具：firewalls或者iptables，都是将定义好的规则交由内核中的netfilter即网络过滤器读取并处理
+12.使用ssh服务进行远程连接，相比ftp、telnet等更安全
