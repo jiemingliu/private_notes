@@ -1,0 +1,58 @@
+// 克里金插值调用方式：
+IKriging inter =null;
+switch(Ktype.SelectedIndex)
+{
+    case 0: inter = new SimpleKriging(WellData);break;
+    case 1: inter = new Kriging(WellData); break;
+    case 2: inter = new UniversalKriging(WellData); break;
+}
+
+IKrigingModel kmodel = null;
+switch (KMType.SelectedIndex)
+{
+    case 1: kmodel = new ModelExponential(); break;
+    case 2: kmodel = new ModelGaussian(); break;
+    case 3: kmodel = new ModelSpherical(); break;
+}
+kmodel.C0 = double.Parse(Nugget.Text);
+kmodel.C1 = double.Parse(Sill.Text);
+kmodel.Range = double.Parse(Range.Text);
+inter.SetKrigingModel(kmodel);
+temp = inter.GetType().Name + "-" + kmodel.Name;
+double radius = kmodel.Range;
+
+inter.GetSearch().SetAniso(0, radius, radius);
+inter.GetSearch().SetParameters(WellData.Count, WellData.Count);
+// inter.GetSearch().
+Kpoint[,] data = new Kpoint[parameter.ColumnCount, parameter.RowCount];
+for (int i= 0;i&lt; parameter.ColumnCount;i++)
+    for (int j = 0; j &lt; parameter.RowCount; j++)
+    {
+        data[i, j].X = parameter.XMin + parameter.IncX * i;
+        data[i, j].Y = parameter.YMin + parameter.IncY * j;
+        data[i, j].W = inter.Interpolate(data[i, j].X, data[i, j].Y, 0, true)[0];
+        data[i, j].Z = 0;
+    }
+    
+SurfaceGrid tgrid = new SurfaceGrid(data);
+      
+//井校正调用方式：
+SurfaceGrid tgrid = new SurfaceGrid(data);
+WellAdjustmentProcessor p = new WellAdjustmentProcessor(tgrid, WellData);
+IDW inter = new IDW(p.GetWellsResidualHeight());
+// IInterpolator inter = new IDW(WellData);
+inter.Weigth = 2;
+this.temp = inter.GetType().Name;
+double radius = 0;
+if (parameter.Width &gt; parameter.Height)
+    radius = parameter.Width;
+else
+    radius = parameter.Height;
+inter.GetSearch().SetAniso(0, radius, radius);
+if (checkBox2.Checked)
+    return p.MakeGridByGlobal(inter, parameter);
+else
+    return p.MakeGridByLocal(parameter);
+
+// 等值线追踪后的代码使用：
+new ContourLine 后 直接调用ContourLine 的索引就可以返回等值线了

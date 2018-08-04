@@ -8,7 +8,7 @@ public:
 };
 
 //MyClass.cpp
-map<T,T> opMap_={
+map<T,T> MyClass::opMap_={
 	{key1,value1},
 	{key2,value2},
 	{key3,value3}
@@ -30,6 +30,9 @@ private:
 
 //MyClass.cpp
 MyClass::OpMap MyClass::opMap_ = init_map();
+
+2.1 直接初始化为空的写法
+MyClass::OpMap MyClass::opMap_=OpMap();
 
 3. static map中保存成员函数指针的写法
 //A.h
