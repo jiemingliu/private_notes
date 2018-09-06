@@ -2,3 +2,5 @@ LNMP(Linux+Nginx+Mysql+python)
 Hadoop生态系统
 Apache
 搭建新浪sae个人博客
+opencv
+open inventor(openGL)

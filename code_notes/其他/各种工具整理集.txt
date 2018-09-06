@@ -12,6 +12,10 @@
 
 
 
+开发工具
+1，反编译c#，ilspy，dnSpy
+
+
 文本工具
 1，minipad2
 2，PDF阅读器：PDX-XChange Viewer
