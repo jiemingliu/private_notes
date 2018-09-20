@@ -3,4 +3,4 @@ Hadoop生态系统
 Apache
 搭建新浪sae个人博客
 opencv
-open inventor(openGL)
+基于openGL发展的库有open inventor，OpenSceneGraph，VTK
