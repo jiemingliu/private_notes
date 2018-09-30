@@ -1,6 +1,6 @@
 LNMP(Linux+Nginx+Mysql+python)
-Hadoop生态系统
-Apache
+Apache Hadoop生态系统
 搭建新浪sae个人博客
 opencv
 基于openGL发展的库有open inventor，OpenSceneGraph，VTK
+ELK\Spark\Flink大数据技术
