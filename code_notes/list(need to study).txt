@@ -4,3 +4,4 @@ Apache Hadoop生态系统
 opencv
 基于openGL发展的库有open inventor，OpenSceneGraph，VTK
 ELK\Spark\Flink大数据技术
+数据分析相关书籍(深入浅出统计学、深入浅出数据分析)

@@ -1,0 +1,5 @@
+c++ primer
+effective c++
+Linux操作手册
+设计模式：可复用面向对象软件的基础
+深入浅出统计学
