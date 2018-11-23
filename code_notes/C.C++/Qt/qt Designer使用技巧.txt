@@ -1,0 +1,5 @@
+1,窗体或者对话框的布局尽量使用QLayout，包括Grid Layout,Vertical Layout,Horizontal Layout,Form Layout等，如果
+2，在QLayout中调整控件大小，可以往QLayout中添加Horizontal Spacer或者Vertical Spacer来实现调整大目的
+3，控件样式尽量使用qss来控制，语法类似css
+4,QGroupBox继承于QWidget，单元内部可以通过各种布局类管理孩子控件（QWidget），最终调用QGroupBox::setLayout关联布局类，QGroupBox不能随主界面进行缩放
+5，要想窗体或者对话框中控件随窗体或者对话框的大小发生线性变化，得设置窗体或对话框的布局方式为水平或垂直或栅格
