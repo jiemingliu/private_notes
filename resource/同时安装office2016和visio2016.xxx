@@ -1,0 +1,51 @@
+同时安装office2016与visio2016
+解决方法
+1、下载官方镜像文件
+使用的是Visio镜像：cn_visio_professional_2016_x86_x64_dvd_6970929.iso。
+下载地址
+网盘：http://pan.baidu.com/s/1skT4P7B
+种子：ed2k://|file|cn_visio_professional_2016_x86_x64_dvd_6970929.iso|2588262400|52A997F3AF4E40B896C8E4677CF10E90|/
+2、下载Office 2016 Deployment Tool工具
+下载地址：https://www.microsoft.com/en-us/download/details.aspx?id=49117
+3、安装Office 2016 Deployment Tool到D:\tool。
+在D盘新建tool文件夹，安装到该文件夹，可以看到如下两个文件：configuration.xml 和 setup.exe。(如果新版本tool生成的不是configuration.xml,则文件重命名为configuration.xml)
+用记事本打开并修改configuration.xml，把Configuration修改成如下代码：
+1.	<Configuration>
+2.	  <Add SourcePath="H:\" OfficeClientEdition="64" Branch="Current">
+3.	    <!-- <Product ID="O365ProPlusRetail">
+4.	      <Language ID="en-us" />
+5.	    </Product> -->
+6.	    <Product ID="VisioProRetail">
+7.	      <Language ID="zh-cn" />
+8.	    </Product>
+9.	    <Product ID="proplusretail">
+10.	      <Language ID="zh-cn" />
+11.	      <ExcludeApp ID="Access" />
+12.	      <ExcludeApp ID="Publisher" />
+13.	      <ExcludeApp ID="Groove" />
+14.	      <ExcludeApp ID="Lync" />
+15.	      <ExcludeApp ID="Outlook" />
+16.	<ExcludeApp ID="Skype" />
+17.	    </Product>
+18.	  </Add>
+19.	  <!--  <Updates Enabled="TRUE" Branch="Current" /> -->
+20.	  <!--  <Display Level="None" AcceptEULA="TRUE" />  -->
+21.	  <!--  <Property Name="AUTOACTIVATE" Value="1" />  -->
+22.	</Configuration>
+Add后面添加的SourcePath="H:\"是用虚拟光驱加载cn_visio_professional_2016_x86_x64_dvd_6970929.iso后的路径。OfficeClientEdition="64"，是指定安装64位的，若是32位，请将此处改为32即可，然后保存。
+4、执行安装命令
+在D盘tool文件夹中，按住shift，点击鼠标右键，可以快速打开命令窗口（CMD）。win10中是“在此处打开Powershell窗口”。
+在窗口中执行以下命令。注意：“/configure”前后都是有空格的，很多朋友说没装上可能是这个原因 。
+D:\tool>setup.exe /configure configuration.xml
+5、坐等安装
+
+6、激活
+附上Windows激活工具KMSpico ，支持Win10、Windows8.1、Win8和Office2016等产品.
+需要先打开一次软件，再使用破解工具。
+下载链接：http://www.iruanmi.com/kmspico/
+7、其它情况
+如果因为之前卸载过office2016，现在又想装。
+这时候可能会出问题，用下面这个软件，它会清理之前的一些残留文件。
+记得关闭杀毒软件（亲测无毒）。
+下载链接：http://pan.baidu.com/s/1pL1yTqb
+
