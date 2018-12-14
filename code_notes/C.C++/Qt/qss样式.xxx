@@ -1,0 +1,4 @@
+1.圆角矩形样式
+QPushButton{border-width: 1px;\npadding: 1px;\nborder-style: solid; \nborder-radius: 6px;\nbackground-color: qlineargradient(spread:pad, x1:0.0175824, y1:1, x2:0, y2:0, stop:0 rgba(207, 207, 207, 255), stop:1 rgba(252, 252, 252, 255));\nborder-color: rgb(0, 0, 0);\nmin-width: 9ex;\nmin-height: 2.5ex;\n}\nQPushButton::hover {\n   background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(230, 230, 230, 255), stop:1 rgba(167, 217, 245, 255))\n}\nQPushButton::pressed {\n    padding-left: 5px;\n    padding-top: 5px;\n    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(229, 244, 252, 255), stop:1 rgba(104, 179, 219, 255))\n}
+
+2,如果想要父类的样式不应用于子类，需要在父类样式表的外层加 QMainWindow{} 包裹样式
