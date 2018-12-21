@@ -1,0 +1,7 @@
+1.QGraphicsScene保存场景成图片
+QImage image(mysize,QImage::Format_RGB32);
+QPainter painter(&image);
+myscene->render(&painter);
+image.save(mypath/myimagefile.png);
+
+2.绘图控件，QCustomPlot
