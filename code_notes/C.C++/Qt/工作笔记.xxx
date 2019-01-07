@@ -5,3 +5,6 @@ myscene->render(&painter);
 image.save(mypath/myimagefile.png);
 
 2.绘图控件，QCustomPlot
+
+3.想要从外部出发Qt的控件的信号，可以在外部定义一个信号，再通过connect绑定自定义信号与控件的信号，实现转发，代码如下
+connect(this,SIGNAL(activeTableWidget(int,int)),ui.tableWidget,SIGNAL(cellClicked(int,int)));
