@@ -8,3 +8,8 @@ image.save(mypath/myimagefile.png);
 
 3.想要从外部出发Qt的控件的信号，可以在外部定义一个信号，再通过connect绑定自定义信号与控件的信号，实现转发，代码如下
 connect(this,SIGNAL(activeTableWidget(int,int)),ui.tableWidget,SIGNAL(cellClicked(int,int)));
+
+4.控件的右键菜单可通过两种方式实现，继承自QWidget，一种是控件设置菜单选项ui.twTestInfo->setContextMenuPolicy(Qt::CustomContextMenu);然后添加菜单响应槽函数 void on_twTestInfo_customContextMenuRequested(QPoint pos).
+另外一种方式是重写基类QWidget的右键菜单事件  QWidget::contextMenuEvent(QContextMenuEvent *)
+
+5.Qt通常使用一种方式隐藏自己的成员变量和不想让用户看到的内容，比如有一个类A，那么在A.cpp中定义一个类APrivate,把想要隐藏的细节放在APrivate类中，类A中使用宏声明 Q_DECLARE_PRIVATE(A) ，类APrivate中使用宏声明 Q_DECLARE_PUBLIC(A)。最后在类A中如果需要使用APrivate的数据，在代码中添加Q_D(A),即可使用d->去指向APrivate中数据
