@@ -1,0 +1,3 @@
+1.c语言读写操作有fread,fwrite,只能以二进制方式读写
+2.c语言读写文本文件，用fprintf写，用fgets,getchar,geiline,fscanf等读取
+3.c++读写，用fstream,ifstream,ofstream，用 << 和 >> 读写文本文件，用read和write读写二进制文件 
