@@ -1,3 +1,4 @@
 1. .bat脚本文件实际上就是将文件中内容在cmd中执行，如果有参数，将参数进行替换
 
 2. FFLIB之FFLUA——C++嵌入Lua&扩展Lua利器
+3. tinyXML-c++解析xml文件
