@@ -27,38 +27,7 @@
 	步骤2：服务器向浏览器返回HTTP响应，响应包括响应代码、响应类型，以及其他相关的Header，通常服务器的HTTP响应会携带内容，也就是一个Body，包含响应的内容
 	步骤3：如果浏览器还需要继续向服务器请求其他资源，就再次发出HTTP请求，重复步骤1、2
 	
-	
-在代码层面对socket的理解
-利用系统调用 socket()，它返回套接字描述符 (socket descriptor)，这是一个无符号整数，然后再通过它来进行send() 和 recv()调用
 
-网络到本机和本机到网络的字节顺序转换
-htons(),h-to-n-s,Host to Network Short,本机到网络字节顺序转换
-htonl(),h-to-n-s,Host to Network Long,本机到网络字节顺序转换
-ntohs(),n-to-h-s,Network to Host Short
-ntohl(),n-to-h-l,Network to Host Long
-
-IP点数和字符串相互转换
-ip2string:inet_addr()
-string2ip:inet_ntoa()
-
-面向连接的数据报套接字流程
-socket()
-bind()
-listen()
-accept()
-send(),recv()
-
-无连接的数据报套接字流程
-socket()
-bind()
-listen()
-accept()
-sendto(),recvfrom()
-
-其他函数
-close(),shutdown()关闭套接字
-getpeername() 告诉你在连接的流式套接字上谁在另外一边
-gethostname() 返回你程序所运行的机器的主机名字
 
 论述几种类型服务器的区别
 1.阻塞型服务器，适用于单客户连接
