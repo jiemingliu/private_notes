@@ -1,0 +1,4 @@
+1.sae创建sae应用
+2.sae应用中代码管理，创建新版本
+3.初始化本地git仓库(然后需要git remote add sae [git地址])，或者从sae上clone git仓库
+4.提交代码
