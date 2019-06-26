@@ -1,0 +1,15 @@
+用chrome的user agent switcher来模拟移动设备，有用scriptblock插件来禁用js，有用firefox模拟的，总之，都不行…或者是我方法有问题……？如有大神了解请多多指教。
+
+另外，还有一个很强势的办法，很多大神都指出可以用 fiddler来抓包，亲测很强！如下是简易教程
+
+首先，手机和电脑连在同一WiFi下，且在同一ip网段内（一般都是在同一网段）
+
+然后，安装fiddler
+
+安装成功后，打开fiddler，依次点击Tools-Fiddler Options -Connections, 选中Allow remote computers to connect.
+
+重启fiddler
+
+之后，鼠标移至在软件右上角有online，显示了当前本机ip
+
+然后将手机WiFi的网络设置中的HTTP代理设置中改为手动，服务器改为电脑ip，端口为8888
