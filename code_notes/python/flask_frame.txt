@@ -1,2 +1,0 @@
-1，加载html文件，html文件必须放在app.py同级目录的文件夹templates中
-2，html加载.css和.js文件时的目录问题。方法一：所有静态文件都要放在static文件夹中(此static文件夹和templates文件夹同级)，同时，在html加载这些静态文件时，url路由得加/static/...。方法二：使用url_for构造路径的方法。方法三：实例化Flask类时参数设置static_url_path='',此将static_url_path置空相当于设置把所有根目录下URL的访问都关联到/static/目录下，所以静态HTML模版中直接可以引用/js/something.js而不是/static/js/something.js
