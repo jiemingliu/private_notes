@@ -133,3 +133,11 @@ git diff 文件名   查改该文件被修改的地方
 	git stash drop [stash{Num}]					删除工作现场
 	git stash pop [stash{Num}]					恢复并删除工作现场
 	如果只有一个工作现场，可以不带参数，即 [stash{Num}]，其中Num为git stash list查看到的数字
+12，多用户的使用
+git提供global，system，local三种级别的用户，范围逐级降低
+git config --global user.name "username"
+git config --global user.email user@email.com
+git config --system user.name "username"
+git config --system user.email user@email.com
+git config --local user.name "username"
+git config --local user.email user@email.com
