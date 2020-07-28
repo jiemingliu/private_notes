@@ -17,3 +17,16 @@ shell脚本是将各种命令通过逻辑语句组合形成的程序
 12.使用ssh服务进行远程连接，相比ftp、telnet等更安全
 13.service是脚本程序，为/etc/init.d目录下的众多服务器程序提供统一管理
 14.squid代理服务器
+15.基础指令shell
+	pwd  显示当前路径
+	cd ~   主目录    cd - 回退一个目录   
+	mkdir dir   创建目录      rmdir dir  删除目录     mv olddir newdir   重命名目录
+	cd ../  向上一个路径
+	ls -a  或者 ls -ah  显示隐藏文件和文件夹
+	wc file   统计文件行数，单词数等
+	cat file   查看文件内容
+	touch file  和  vi file   都可以创建文件
+	cp oldfile newfile  复制文件
+	mv oldfile newfile  重命名文件
+	rm file1 file2 file3  删除文件
+	使用竖线"|"连接两个命令，一个命令的输出作为另一个命令的输入，叫做管道，一种通信方式，还有共享内存、消息队列、信号、套接字(socket) 
