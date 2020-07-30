@@ -2,37 +2,61 @@ Git和其他版本控制系统如SVN的一个不同之处就是有暂存区的�
 工作区(Working Directory):就是你在电脑里能看到的目录
 版本库(Repository):工作区有一个隐藏目录.git，这个不算工作区，而是Git的版本库,Git的版本库里存了很多东西，其中最重要的就是称为stage（或者叫index）的暂存区，还有Git为我们自动创建的第一个分支master，以及指向master的一个指针叫HEAD
 
-安装git后进行设置：git config --global user.name "name"    
-git config --global user.email "email"      # --global参数表示这台机器上所有的git仓库都使用这个配置
+1.安装git后进行设置：
+git config --global user.name "name"    
+git config --global user.email "email"      # --global参数表示这台机器上所有的git仓库都使用这个配置，另外还有system，local,使用域范围逐级降低，多用户可以在不同仓库中设置不同用户名和email
 创建版本库
 	1.mkdir 库名
 	  cd 库名
 	2.git init
-提交到版本库(在文件所在目录下操作)
+提交到本地版本库(在文件所在目录下操作)
 	1.git add 文件名		#可反复多次使用，添加多个文件
 	2.git commit -m "提交说明"
 git status 命令显示仓库当前的状态
 git diff 文件名   查改该文件被修改的地方
-回退版本
+2.回退版本
 	HEAD指向当前版本
+	git diff [file] 			查看文件修改状态
+	git diff HEAD -- [file]		查看工作区和版本库最新版本的区别
 	git log  可以查看提交历史，加上  --pretty=oneline参数，可以让历史信息只显示一行
 	git reset --hard HEAD^  回退上一版本，HEAD^^回退上两个版本
 	git reset --hard commit_id  回退到该id版本
 	git reflog 记录每一次命令
-撤销修改
+	
+	git reset --hard [commit_id]
+	git checkout -- [file]		放弃file在工作区的修改
+	
+	放弃提交到缓存区的修改
+	step1: git reset HEAD [file]
+	step2: git checkout -- [file]
+3.撤销修改
 	git checkout -- file  可以丢弃工作区的修改,让这个文件回到最近一次git commit或git add时的状态(其实是用版本库里的版本替换工作区的版本)
 	git reset HEAD file  可以把暂存区的修改撤销掉（unstage），重新放回工作区
-删除文件
+4.删除文件
 	1.git rm file  从版本库中删除该文件
 	2.git commit -m "提交说明"  提交到版本库
-连接远程库
+5.连接远程库
+	链接远程仓库，一般是github
+		step1: 创建ssh key，用户主目录下是否有 .ssh目录，里面是否有 id_rsa 和id_rsa.pub文件，如果不存在，执行一下命令
+			$ ssh-keygen -t rsa -C "email@.com"
+		step2: 登录github，add ssh，将id_rsa.pub里的内容拷贝到Key
+	
 	git remote add origin git@github.com:jiemingliu/mygit.git    连接远程库，其中mygit是本地git库
 	git push -u origin master   第一次推送本地库的内容到远程
 	git push origin master   以后在本地作了提交之后推送到github
 	git clone git@github.com:jiemingliu/gitskills.git   从远程github库克隆到本地，其中gitskills是远程库
 	git remote 或者 git remote -v   查看远程库的信息
 	
-分支管理
+	本地到github
+		step1: github创建空仓库，readme.md和gitignore按照默认不勾选
+		step2: git remote add origin [github上的新建空仓库的地址]
+		step3: git push -u origin master 	(第一次加上了-u参数，Git不但会把本地的master分支内容推送的远程新的master分支，还会把本地的master分支和远程的master分支关联起来，在以后的推送或者拉取时就可以简化命令，不加-u参数)
+	github到本地
+		step1: 切换工作目录，执行命令 git clone [github上非空仓库的地址]
+		github仓库地址支持多种协议，包括https，如  https://github.com/jiemingliu/study_node.js.git
+		但通过ssh支持的原生git协议速度最快，如  git@github.com:jiemingliu/study_node.js.git
+
+6.分支管理
 	git branch   查看分支
 	git branch <name>   创建分支
 	git checkout <name>   切换到某分支
@@ -41,19 +65,20 @@ git diff 文件名   查改该文件被修改的地方
 	git branch -d <name>   删除分支
 	当Git无法自动合并分支时，就必须首先解决冲突。解决冲突后，再提交，合并完成。用git log --graph命令可以看到分支合并图
 	git默认使用fast-forWord方式合并，可以用git merge --no-ff -m "提交说明" dev 来使用普通方式来合并分支
-	封存工作现场
-		git stash   把当前工作现场"储藏"起来，用来以后恢复，封存起来之后工作区是干净的
-		git stash list   查看封存历史
-		git stash apply   恢复封存，stash内容并不删除，需要用git stash drop删除
-		git stash pop   恢复封存的同时把stash内容删除
-		git stash apply stash@{0}   恢复多次stash其中一个stash，大括号中序号可以用git stash list查看
 	开发新功能，一般新建一个分支feature
 	git branch -D <name>   强行删除一个没有被合并过的分支
 	拉取所有分支并同步代码
 		git branch -r | grep -v '\->' | while read remote; do git branch --track "${remote#origin/}" "$remote"; done
 		git fetch --all
 		git pull --all
-标签管理
+	git log --graph --pretty=oneline --abbrev-commit	查看分支合并图
+封存工作现场
+	git stash   把当前工作现场"储藏"起来，用来以后恢复，封存起来之后工作区是干净的
+	git stash list   查看封存历史
+	git stash pop   恢复封存的同时把stash内容删除
+	git stash apply   恢复封存，stash内容并不删除，需要用git stash drop删除,如果只有一个工作现场，可以不带参数
+	git stash apply stash@{0}   恢复多次stash其中一个stash，大括号中序号可以用git stash list查看
+7.标签管理
 	默认标签是打在最新提交的commit上的
 	git tag <name>   打标签
 	git tag   查看所有标签
@@ -64,13 +89,13 @@ git diff 文件名   查改该文件被修改的地方
 	git push origin <tagname>   推送某个标签到远程
 	git push origin --tags   一次性推送全部尚未推送到远程的本地标签
 	删除已经推送到远程的标签，先删除本地git tag -d <tagname>，然后删除远程git push origin :refs/tags/<tagname>
-自定义Git
+8.自定义Git
 	git config --global color.ui true   配置颜色
 	git config --global allas.st status   设置简写别名
 	加--global是针对当前用户起作用，如果不加，那只针对当前仓库起作用
 	每个仓库的Git配置文件都放在.git/config文件中，别名在[alias]后面，要删除别名，直接删除对应的行
 	当前用户的Git配置文件放在用户主目录下的隐藏文件.gitconfig中，配置别名也可以直接修改这个文件
-	使用beyond compare作为对比，合并工具的方法，在.gitconfig文件中增加如下
+	使用beyond compare作为对比，合并工具的方法，在.gitconfig文件中增加如下,使用git difftool "对比文件名" 命令查看差异
 		[diff]
 			tool = bc3
 		[difftool "bc3"]
@@ -79,65 +104,3 @@ git diff 文件名   查改该文件被修改的地方
 			tool = bc3
 		[mergetool "bc3"]
 			path = D:\\Program Files\\Beyond Compare 4\\BCompare.exe
-1, git 安装完成后执行(--global参数，用了这个参数，表示你这台机器上所有的Git仓库都会使用这个配置)
-	git config --global user.name "Your name"
-	git config --global user.email "Your email"
-2, git Bash 进入需要创建为repository的文件夹
-	git init
-3, 提交
-	git add [files]
-	git commit -m "commit message"
-4,  HEAD 指向当前版本
-	git status 					查看repository的工作区的状态
-	git diff [file] 			查看文件修改状态
-	git diff HEAD -- [file]		查看工作区和版本库最新版本的区别
-	git log 					查看提交日志
-	git log --pretty=oneline	查看提交日志(一行显示)
-	git reflog					查看每一次命令
-5，版本回退
-	git reset --hard [commit_id]
-	git checkout -- [file]		放弃file在工作区的修改
-	
-	放弃提交到缓存区的修改
-	step1: git reset HEAD [file]
-	step2: git checkout -- [file]
-6, 删除
-	git rm [file]
-	git commit -m "commit message"
-7, 链接远程仓库，一般是github
-	step1: 创建ssh key，用户主目录下是否有 .ssh目录，里面是否有 id_rsa 和id_rsa.pub文件，如果不存在，执行一下命令
-		$ ssh-keygen -t rsa -C "email@.com"
-	step2: 登录github，add ssh，将id_rsa.pub里的内容拷贝到Key
-8, 本地到github
-	step1: github创建空仓库，readme.md和gitignore按照默认不勾选
-	step2: git remote add origin [github上的新建空仓库的地址]
-	step3: git push -u origin master 	(第一次加上了-u参数，Git不但会把本地的master分支内容推送的远程新的master分支，还会把本地的master分支和远程的master分支关联起来，在以后的推送或者拉取时就可以简化命令，不加-u参数)
-9, github到本地
-	step1: 切换工作目录，执行命令 git clone [github上非空仓库的地址]
-	github仓库地址支持多种协议，包括https，如  https://github.com/jiemingliu/study_node.js.git
-	但通过ssh支持的原生git协议速度最快，如  git@github.com:jiemingliu/study_node.js.git
-10, 分支
-	HEAD严格来说不是指向提交，而是指向master，master才是指向提交的，所以，HEAD指向的就是当前分支。当新增一个分支时，实际上是新增列一个指针指向和master相同的提交，HEAD再指向新分支指针
-	git branch 						查看分支
-	git branch [branch_name]		创建分支
-	git checkout [branch_name]		切换分支
-	git checkout -b [branch_name]	创建+切换到分支
-	git merge [branch_name]			合并某分支到当前分支
-	git branch -d [branch_name]		删除分支
-	git branch -D <name>			强行删除未合并分支
-	git log --graph --pretty=oneline --abbrev-commit	查看分支合并图
-11, 保存工作现场
-	git stash			保存工作现场，执行之后缓存区是干净的
-	git stash list		查看保存的工作现场列表
-	git stash apply [stash{Num}]				恢复工作现场
-	git stash drop [stash{Num}]					删除工作现场
-	git stash pop [stash{Num}]					恢复并删除工作现场
-	如果只有一个工作现场，可以不带参数，即 [stash{Num}]，其中Num为git stash list查看到的数字
-12，多用户的使用
-git提供global，system，local三种级别的用户，范围逐级降低
-git config --global user.name "username"
-git config --global user.email user@email.com
-git config --system user.name "username"
-git config --system user.email user@email.com
-git config --local user.name "username"
-git config --local user.email user@email.com
