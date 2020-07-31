@@ -1,4 +1,12 @@
 1. .bat脚本文件实际上就是将文件中内容在cmd中执行，如果有参数，将参数进行替换
-
 2. FFLIB之FFLUA——C++嵌入Lua&扩展Lua利器
 3. tinyXML-c++解析xml文件
+4.RBAC权限管理模式
+5.语法糖，比如python中的@
+6，OCR(Optical Character Recognition):光学字符识别,是指对图片文件中的文字进行分析识别，获取的过程。
+Tesseract：开源的OCR识别引擎，初期Tesseract引擎由HP实验室研发，后来贡献给了开源软件业，后经由Google进行改进，消除bug，优化，重新发布
+7.vs命令工具的使用
+7.1.dumpbin 查看exe引用的动态库,或者查看动态库静态库包含的接口
+在需要查看的文件的当前目录中,执行命令    dumpbin -imports aaa.exe (察看导入)      dumpbin -exports bbb.lib(dll)  (察看导出接口)
+dumpbin -exports bbb.lib > aa.txt    将信息写入到aa.txt中
+7.2.自定义快捷键方式，工具->选项->环境->键盘->在头文件和源文件直接切换：编辑器上下文菜单.代码窗口.切换标题代码文件
