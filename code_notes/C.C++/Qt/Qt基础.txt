@@ -37,5 +37,3 @@ http://download.qt.io/official_releases/qt/  Qt全部版本下载地址
 首先在chat类定义一个eventFilter，该函数是一个虚函数，可以由子类进行更改。所以声明eventFilter如下：
 virtual bool eventFilter(QObject *obj, QEvent *e);大概意思就是如果你要过滤某个事件就返回false，如果要使用某个事件就返回true。
 QKeyEvent类有函数key和modifier，key函数返回的是发生时间的按键值，modifier返回的而是修饰键
-
-7. 可以通过.qss文件对界面进行颜色修饰
