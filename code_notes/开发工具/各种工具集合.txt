@@ -62,6 +62,8 @@
 29,系统激活工具Microsoft Toolkit激活或者KMSPico
 30,正版Windows系统，itellyou.cn
 31,wox系统快捷搜索
+32，Pan Download百度网盘数据下载工具
+33，桌面分区Fences
 
 
 
