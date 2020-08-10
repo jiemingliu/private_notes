@@ -1,0 +1,4 @@
+1.log->log4cpp
+2.内存池库->nedmalloc
+3.网络库->ACE 和 libevent
+4,缓存库->memcache
