@@ -30,6 +30,7 @@
 6, 代码搜索神器：the silver searcher
 
 
+
 系统工具
 1，压缩工具，Bandizip，7-Zip
 2，系统清理，AdwCleaner，CCleaner
@@ -64,6 +65,8 @@
 31,wox系统快捷搜索
 32，Pan Download百度网盘数据下载工具
 33，桌面分区Fences
+34，录屏工具 Captura
+35，uPDF PDF处理工具
 
 
 
@@ -78,6 +81,8 @@
 8，複雜數學幾何公式計算，http://www.wolframalpha.com/
 9,https://cc.ddder.us/htm_data/7/1803/3023312.html
 10, 网址 uzer.me ，网页在线使用ps，cad，office等软件
+11，在线ps，https://ps.gaoding.com/#/
+
 
 
 其他
