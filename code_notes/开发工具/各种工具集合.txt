@@ -18,6 +18,7 @@
 2.SecureCRT是一款支持SSH（SSH1和SSH2）的终端仿真程序，是Windows下登录UNIX或Linux服务器主机的软件。
 3.Wireshark是一个网络封包分析软件。网络封包分析软件的功能是撷取网络封包，。Wireshark使用WinPCAP作为接口，直接与网卡进行数据报文交换
 4.VSPD创建虚拟串口工具，串口调试工具就有很多了，都差不多可用
+5.类图，流程图等工具 processon  lucidchart
 
 
 

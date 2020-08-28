@@ -104,3 +104,9 @@ git diff 文件名   查改该文件被修改的地方
 			tool = bc3
 		[mergetool "bc3"]
 			path = D:\\Program Files\\Beyond Compare 4\\BCompare.exe
+9.tortoiseGit版本图说明
+红色：当前所在分支
+绿色：本地分支（一般对本地无用分支可以直接删除）
+黄色：tag
+橙色：远程分支
+灰色：合并标示
