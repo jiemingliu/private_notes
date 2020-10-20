@@ -20,18 +20,15 @@ git diff 文件名   查改该文件被修改的地方
 	git diff HEAD -- [file]		查看工作区和版本库最新版本的区别
 	git log  可以查看提交历史，加上  --pretty=oneline参数，可以让历史信息只显示一行
 	git reset --hard HEAD^  回退上一版本，HEAD^^回退上两个版本
-	git reset --hard commit_id  回退到该id版本
+	git reset --hard [commit_id]  回退到该id版本
 	git reflog 记录每一次命令
-	
-	git reset --hard [commit_id]
 	git checkout -- [file]		放弃file在工作区的修改
 	
+3.撤销修改
+	git checkout -- [file]  可以丢弃工作区的修改,让这个文件回到最近一次git commit或git add时的状态(其实是用版本库里的版本替换工作区的版本)
 	放弃提交到缓存区的修改
 	step1: git reset HEAD [file]
 	step2: git checkout -- [file]
-3.撤销修改
-	git checkout -- file  可以丢弃工作区的修改,让这个文件回到最近一次git commit或git add时的状态(其实是用版本库里的版本替换工作区的版本)
-	git reset HEAD file  可以把暂存区的修改撤销掉（unstage），重新放回工作区
 4.删除文件
 	1.git rm file  从版本库中删除该文件
 	2.git commit -m "提交说明"  提交到版本库
@@ -72,6 +69,7 @@ git diff 文件名   查改该文件被修改的地方
 		git fetch --all
 		git pull --all
 	git log --graph --pretty=oneline --abbrev-commit	查看分支合并图
+	git checkout -b 本地分支名 origin/远程分支名    拉取远程分支并切换到该分支
 封存工作现场
 	git stash   把当前工作现场"储藏"起来，用来以后恢复，封存起来之后工作区是干净的
 	git stash list   查看封存历史
