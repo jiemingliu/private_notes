@@ -10,7 +10,7 @@
 9，PaintDotNet，mini版PS
 10，滚动截图网页，FastStone（百度网盘）
 11，ABBYY FineReader,OCR和处理PDF
-
+12，截图工具，Snipaste
 
 
 开发工具
@@ -37,6 +37,7 @@
 2，系统清理，AdwCleaner，CCleaner
 3，数据恢复，Recuva,https://www.piriform.com/recuva/download，或者易我，http://www.easeus.com.cn/drw/
 4，下载工具，HTTrack：（ 离线浏览器工具，可以从网络下载完整页面内容 ），Internet Download Manager 
+   下载工具，wget
 5，卸载软件，lobit Uninstaller
 6，TeamViewer，向日葵，都是远程控制
 7，.flux，显示器色温自动调节
